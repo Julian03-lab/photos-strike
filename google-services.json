@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "231047231945",
+    "project_id": "visualize-app-522dd",
+    "storage_bucket": "visualize-app-522dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231047231945:android:bb4ac014fc9e119affd018",
+        "android_client_info": {
+          "package_name": "com.fjulian03.visualize"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUlIgtFWFDSqiVTJaEAJuel_TS7d1Nt44"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
