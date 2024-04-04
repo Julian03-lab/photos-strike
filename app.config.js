@@ -4,6 +4,7 @@ export default {
   expo: {
     name: "visualize-app",
     slug: "visualize-app",
+    scheme: "visualize-app",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
@@ -30,7 +31,10 @@ export default {
       output: "static",
       favicon: "./assets/images/favicon.png",
     },
-    plugins: ["expo-router"],
+    plugins: ["@react-native-google-signin/google-signin", "expo-router"],
+    android: {
+      googleServicesFile: "./google-services.json",
+    },
     experiments: {
       typedRoutes: true,
     },

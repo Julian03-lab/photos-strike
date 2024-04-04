@@ -12,7 +12,12 @@
           "package_name": "com.fjulian03.visualize"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "231047231945-023ir7j6gso3u0icdpb640ncm5ilars7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBUlIgtFWFDSqiVTJaEAJuel_TS7d1Nt44"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "231047231945-023ir7j6gso3u0icdpb640ncm5ilars7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

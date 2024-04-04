@@ -1,16 +1,14 @@
-// import "dotenv/config";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
-// const firebaseConfig = {
-//   apiKey: process.env.API_KEY,
-//   authDomain: process.env.AUTH_DOMAIN,
-//   projectId: process.env.PROJECT_ID,
-//   storageBucket: process.env.STORAGE_BUCKET,
-//   messagingSenderId: process.env.MESSAGING_SENDER_ID,
-//   appId: process.env.APP_ID,
-// };
+const firebaseConfig = {
+  apiKey: "AIzaSyBl1ELgwboG2cxYGdNN_iAvUVlISbOsR6k",
+  authDomain: "visualize-app-522dd.firebaseapp.com",
+  projectId: "visualize-app-522dd",
+  storageBucket: "visualize-app-522dd.appspot.com",
+  messagingSenderId: "231047231945",
+  appId: "1:231047231945:web:8b34cb12a3a8f9b0ffd018",
+};
 
-// if (!firebase.apps.length) {
-//   firebase.initializeApp(configuracionFirebase);
-// }
-
-// export { firebase };
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
