@@ -1,6 +1,6 @@
 import CameraComponent from "@/components/CameraComponent";
 import { View, Text } from "react-native";
-const pictures = () => {
+const TakePhoto = () => {
   return (
     <View
       style={{
@@ -11,4 +11,4 @@ const pictures = () => {
     </View>
   );
 };
-export default pictures;
+export default TakePhoto;

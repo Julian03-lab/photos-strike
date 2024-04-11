@@ -1,19 +1,21 @@
-import { Stack } from "expo-router";
+import { Tabs, useSegments } from "expo-router";
 
-export default function RootLayout() {
-  return <RootLayoutNav />;
-}
+const MainLayout = () => {
+  const segment = useSegments();
 
-function RootLayoutNav() {
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: true }} />
-      <Stack.Screen
-        name="take-photo"
+    <Tabs>
+      <Tabs.Screen
+        name="home"
         options={{
           headerShown: false,
+          tabBarStyle: {
+            display: segment.length === 3 ? "none" : "flex",
+          },
         }}
       />
-    </Stack>
+      <Tabs.Screen name="profile" options={{ title: "Perfil" }} />
+    </Tabs>
   );
-}
+};
+export default MainLayout;

@@ -6,23 +6,24 @@ import {
   StyleSheet,
   TouchableHighlight,
   Linking,
+  Button,
 } from "react-native";
+import { useSession } from "../../context/ctx";
 
 const HomePage = (): React.JSX.Element => {
   const [permission, requestPermission] = Camera.useCameraPermissions();
-  console.log(permission);
 
   async function goToTakePhoto() {
+    router.push("/home/take-photo");
     if (permission?.canAskAgain === false && permission?.status !== "granted") {
       return Linking.openSettings();
     }
 
     if (permission?.status === "granted") {
-      router.push("/take-photo");
     } else {
       const result = await requestPermission();
       if (result.status === "granted") {
-        router.push("/take-photo");
+        router.push("/home/take-photo");
       }
     }
   }

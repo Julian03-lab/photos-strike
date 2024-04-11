@@ -1,59 +1,23 @@
-import AuthInput from "@/components/inputs/AuthInput";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  TouchableHighlight,
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSession } from "../context/ctx";
+import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 
 const LoginPage = () => {
+  const { signIn, loading } = useSession();
+
+  console.log(loading);
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Welcome Back!</Text>
-      <Text style={styles.subtitle}>
-        Enter your email address and password to get access your account
-      </Text>
-      <AuthInput />
-      <AuthInput />
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
-        <Text style={styles.helper}>Forgot?</Text>
-        <TouchableHighlight onPress={() => console.log("lgin")}>
-          <View
-            style={{
-              flexDirection: "row",
-              backgroundColor: "#3B35E0",
-              alignItems: "center",
-              borderRadius: 6,
-            }}
-          >
-            <Text style={styles.button}>Login</Text>
-            <MaterialCommunityIcons
-              name="arrow-right"
-              size={24}
-              color="white"
-              style={styles.arrow}
-            />
-          </View>
-        </TouchableHighlight>
-      </View>
-      <Button title="Login with google" onPress={() => {}} />
-      <View>
-        <Text style={styles.subtitle}>Don't have an account?</Text>
-        <Link style={styles.helper} href={"/(auth)/register"}>
-          Register
-        </Link>
-      </View>
+      <GoogleSigninButton
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Dark}
+        onPress={signIn}
+      />
+      {loading && <Text style={styles.helper}>Loading...</Text>}
     </SafeAreaView>
   );
 };
