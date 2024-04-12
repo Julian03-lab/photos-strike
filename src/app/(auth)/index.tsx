@@ -1,7 +1,7 @@
 import { Link } from "expo-router";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSession } from "../context/ctx";
+import { useSession } from "../../context/ctx";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 
 const LoginPage = () => {

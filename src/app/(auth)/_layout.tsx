@@ -9,6 +9,12 @@ export default function AuthLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="OnBoard"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

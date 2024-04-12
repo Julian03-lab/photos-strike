@@ -8,7 +8,7 @@ import {
   Linking,
   Button,
 } from "react-native";
-import { useSession } from "../../context/ctx";
+import { useSession } from "../../../context/ctx";
 
 const HomePage = (): React.JSX.Element => {
   const [permission, requestPermission] = Camera.useCameraPermissions();

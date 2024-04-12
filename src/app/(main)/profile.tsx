@@ -1,5 +1,5 @@
 import { View, Text, Button, Image } from "react-native";
-import { useSession } from "../context/ctx";
+import { useSession } from "../../context/ctx";
 const Profile = () => {
   const { session, signOut } = useSession();
 
