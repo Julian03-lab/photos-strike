@@ -1,4 +1,9 @@
-import { Camera, CameraType, FlashMode } from "expo-camera";
+import {
+  Camera,
+  CameraCapturedPicture,
+  CameraType,
+  FlashMode,
+} from "expo-camera";
 import { useEffect, useRef, useState } from "react";
 import {
   View,
@@ -12,6 +17,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
 
 const CAMERA_ICON_SIZE = 64;
 const OTHER_ICON_SIZE = 28;
@@ -20,9 +26,36 @@ const PhotoPreview = ({
   image,
   onClose,
 }: {
-  image: string;
+  image: CameraCapturedPicture;
   onClose: () => void;
 }) => {
+  async function saveImage() {
+    try {
+      console.log("save image");
+      let base64Img = `data:image/jpg;base64,${image.base64}`;
+      let apiUrl = "https://api.cloudinary.com/v1_1/dadt6ioi4/image/upload";
+      let data = {
+        file: base64Img,
+        upload_preset: "azigrdxg",
+      };
+
+      const response = await fetch(apiUrl, {
+        body: JSON.stringify(data),
+        headers: {
+          "content-type": "application/json",
+        },
+        method: "POST",
+      });
+      const file = await response.json();
+      console.log(file);
+      console.log(file.secure_url);
+      //TODO: save image to user in DB
+      //TODO: navigate to next screen
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -37,7 +70,7 @@ const PhotoPreview = ({
 
   return (
     <ImageBackground
-      source={{ uri: image }}
+      source={{ uri: image.uri }}
       style={styles.camera}
       resizeMode="cover"
     >
@@ -45,6 +78,13 @@ const PhotoPreview = ({
         <TouchableOpacity onPress={onClose} activeOpacity={0.8}>
           <MaterialCommunityIcons
             name="close"
+            size={OTHER_ICON_SIZE}
+            color="white"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={saveImage} activeOpacity={0.8}>
+          <MaterialCommunityIcons
+            name="send-check"
             size={OTHER_ICON_SIZE}
             color="white"
           />
@@ -58,7 +98,7 @@ const CameraComponent = () => {
   const [type, setType] = useState(CameraType.back);
   const [flash, setFlash] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<CameraCapturedPicture | null>(null);
   const cameraRef = useRef<Camera>(null);
 
   function toggleCameraType() {
@@ -73,10 +113,34 @@ const CameraComponent = () => {
 
   async function takePicture() {
     if (cameraRef.current && cameraReady) {
-      const photo = await cameraRef.current.takePictureAsync();
-      setImage(photo.uri);
+      const photo = await cameraRef.current.takePictureAsync({
+        quality: 0.7,
+        base64: true,
+      });
+      console.log(photo);
+      const source = photo.base64;
+      if (source) {
+        await cameraRef.current.pausePreview();
+        setImage(photo);
+        // setIsPreview(true);
+      }
     }
   }
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.7,
+      base64: true,
+      selectionLimit: 1,
+      aspect: [1, 1],
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0] as CameraCapturedPicture);
+    }
+  };
 
   function goBack() {
     router.back();
@@ -125,10 +189,7 @@ const CameraComponent = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.bottomBar}>
-            <TouchableOpacity
-              onPress={() => console.log("click")}
-              activeOpacity={0.8}
-            >
+            <TouchableOpacity onPress={pickImage} activeOpacity={0.8}>
               <MaterialCommunityIcons
                 name="view-gallery"
                 size={OTHER_ICON_SIZE}

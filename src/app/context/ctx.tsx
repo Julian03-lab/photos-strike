@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import {
+  getAdditionalUserInfo,
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithCredential,
   type User,
 } from "firebase/auth";
-import { auth } from "root/config/firebase";
+import { auth, db } from "root/config/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
+import { doc, setDoc } from "firebase/firestore";
 
 const AuthContext = React.createContext<{
   signIn: () => void;
@@ -31,6 +33,7 @@ export function useSession() {
 export function SessionProvider(props: React.PropsWithChildren) {
   const [session, setSession] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -68,11 +71,26 @@ export function SessionProvider(props: React.PropsWithChildren) {
       await GoogleSignin.hasPlayServices();
       const { idToken } = await GoogleSignin.signIn();
       const googleCredential = GoogleAuthProvider.credential(idToken);
-      await signInWithCredential(auth, googleCredential);
-      router.replace("/(main)");
+      const result = await signInWithCredential(auth, googleCredential);
+      const user = result.user;
+
+      const info = getAdditionalUserInfo(result);
+
+      if (info?.isNewUser) {
+        const userDoc = doc(db, "users", user.uid);
+        await setDoc(userDoc, {
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        });
+      }
+
+      router.replace("/(main)/home");
       setLoading(false);
     } catch (error: any) {
       console.log(error);
+      setError(error.message);
+      setLoading(false);
     }
   };
 

@@ -29,7 +29,11 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["@react-native-google-signin/google-signin", "expo-router"],
+    "plugins": [
+      "@react-native-google-signin/google-signin",
+      "expo-router",
+      "expo-image-picker"
+    ],
     "experiments": {
       "typedRoutes": true
     },

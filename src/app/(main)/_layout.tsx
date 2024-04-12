@@ -14,6 +14,8 @@ const MainLayout = () => {
           },
         }}
       />
+      <Tabs.Screen name="progress" options={{ title: "Progreso" }} />
+      <Tabs.Screen name="objectives" options={{ headerShown: false }} />
       <Tabs.Screen name="profile" options={{ title: "Perfil" }} />
     </Tabs>
   );

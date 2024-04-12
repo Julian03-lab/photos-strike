@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSession } from "../context/ctx";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
@@ -7,17 +7,20 @@ import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 const LoginPage = () => {
   const { signIn, loading } = useSession();
 
-  console.log(loading);
-
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Welcome Back!</Text>
-      <GoogleSigninButton
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={signIn}
-      />
-      {loading && <Text style={styles.helper}>Loading...</Text>}
+      {!loading ? (
+        <>
+          <Text style={styles.title}>Welcome Back!</Text>
+          <GoogleSigninButton
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Dark}
+            onPress={signIn}
+          />
+        </>
+      ) : (
+        <ActivityIndicator size="large" color="white" />
+      )}
     </SafeAreaView>
   );
 };
