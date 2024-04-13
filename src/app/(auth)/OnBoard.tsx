@@ -12,11 +12,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import CarouselPagination from "@/components/onboarding/CarouselPagination";
 import OnBoardComponent from "@/components/onboarding/OnBoardComponent";
 import { ProgressImage } from "root/assets/svgs/progressImage";
-import { MaterialCommunityIcons, SimpleLineIcons } from "@expo/vector-icons";
-import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
-import { useSession } from "@/context/ctx";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MetaImage } from "root/assets/svgs/metaImage";
 import { StartImage } from "root/assets/svgs/startImage";
+import { router } from "expo-router";
 
 type SliderData = {
   image: React.JSX.Element;
@@ -51,11 +50,12 @@ const sliderData: SliderData = [
 
 const OnBoardScreen = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const slidesRef = useRef(null);
-  const { signIn, loading } = useSession();
-  const handleOnViewableItemsChanged = useRef(({ viewableItems }) => {
-    setActiveIndex(viewableItems[0].index);
-  }).current;
+  const slidesRef = useRef<FlatList>(null);
+  const handleOnViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: any }) => {
+      setActiveIndex(viewableItems[0].index);
+    }
+  ).current;
 
   const viewConfigRef = useRef({ itemVisiblePercentThreshold: 50 }).current;
 
@@ -68,6 +68,8 @@ const OnBoardScreen = () => {
   };
 
   const scrollTo = (direction: "back" | "next") => {
+    if (slidesRef.current === null) return;
+
     if (direction === "back") {
       slidesRef.current.scrollToIndex({ index: activeIndex - 1 });
       return;
@@ -75,7 +77,8 @@ const OnBoardScreen = () => {
     if (activeIndex < sliderData.length - 1) {
       slidesRef.current.scrollToIndex({ index: activeIndex + 1 });
     } else {
-      updateViewedOnboarding();
+      router.replace("/(auth)/turn-notifications");
+      // updateViewedOnboarding();
     }
   };
 
@@ -102,29 +105,36 @@ const OnBoardScreen = () => {
       />
       <CarouselPagination SliderData={sliderData} activeIndex={activeIndex} />
       <View style={styles.buttonContainer}>
-        {activeIndex !== sliderData.length - 1 ? (
-          <TouchableOpacity
-            onPress={() => scrollTo("next")}
-            activeOpacity={0.8}
-            style={styles.button}
+        {activeIndex > 0 ? (
+          <TouchableHighlight
+            onPress={() => scrollTo("back")}
+            underlayColor="transparent"
+            activeOpacity={0.5}
           >
-            <Text style={styles.buttonText}>Continuar</Text>
-          </TouchableOpacity>
+            <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
+          </TouchableHighlight>
         ) : (
-          //   <GoogleSigninButton
-          //     size={GoogleSigninButton.Size.Wide}
-          //     color={GoogleSigninButton.Color.Dark}
-          //     onPress={signIn}
-          //   />
-          <TouchableOpacity
-            onPress={() => scrollTo("next")}
-            activeOpacity={0.8}
-            style={styles.button}
-          >
-            <SimpleLineIcons name="social-google" size={24} color="white" />
-            <Text style={styles.buttonText}>Ingresar con Google</Text>
-          </TouchableOpacity>
+          <View />
         )}
+        <TouchableHighlight
+          onPress={() => scrollTo("next")}
+          underlayColor="transparent"
+          activeOpacity={0.5}
+        >
+          {activeIndex === sliderData.length - 1 ? (
+            <View>
+              <MaterialCommunityIcons name="check" size={24} color="black" />
+            </View>
+          ) : (
+            <View>
+              <MaterialCommunityIcons
+                name="arrow-right"
+                size={24}
+                color="black"
+              />
+            </View>
+          )}
+        </TouchableHighlight>
       </View>
     </View>
   );
@@ -136,32 +146,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
     gap: 36,
-  },
-  button: {
-    backgroundColor: "#51c878",
-    borderRadius: 20,
-    paddingVertical: 16,
-    // paddingHorizontal: 42,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    gap: 12,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "600",
+    paddingVertical: 48,
   },
   buttonContainer: {
     flexDirection: "row",
-    // justifyContent: "space-between",
+    justifyContent: "space-between",
     paddingHorizontal: 44,
     alignItems: "center",
     width: "100%",
-    gap: 20,
   },
 });
