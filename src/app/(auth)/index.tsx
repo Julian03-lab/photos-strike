@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSession } from "../../context/ctx";
-import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 import { GoogleLogo } from "root/assets/svgs/Icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const LoginPage = () => {
   const { signIn, loading } = useSession();
@@ -18,43 +18,56 @@ const LoginPage = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.main}>
+        <Text style={styles.subtitle}>Encantado de tenerte en</Text>
+        <Text style={styles.title}>Visualize</Text>
+        <Text style={styles.subtitle}>Preparate para ver tus avances</Text>
         <View
           style={{
-            width: 300,
-            height: 300,
+            width: 200,
+            height: 200,
             backgroundColor: "red",
           }}
         />
-        <Text style={styles.title}>Visualize</Text>
-        <Text style={styles.subtitle}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
-          volutpat scelerisque nisi, ac aliquam nibh pulvinar vel. Aenean id
-          tortor quis turpis venenatis aliquam.
-        </Text>
       </View>
-      {!loading ? (
-        <>
-          <TouchableHighlight
-            underlayColor={"#51C878"}
-            style={styles.button}
-            onPress={signIn}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 14,
-              }}
+      <View
+        style={{
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 20,
+        }}
+      >
+        <View
+          style={{
+            width: "100%",
+            height: 2,
+            backgroundColor: "#51C878",
+          }}
+        />
+        {!loading ? (
+          <>
+            <TouchableHighlight
+              underlayColor={"#51C878"}
+              style={styles.button}
+              onPress={signIn}
             >
-              <GoogleLogo />
-              <Text style={styles.buttonText}>Continuar con Google</Text>
-            </View>
-          </TouchableHighlight>
-        </>
-      ) : (
-        <ActivityIndicator size="large" color="#51C878" />
-      )}
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 14,
+                }}
+              >
+                <MaterialCommunityIcons name="google" size={24} color="white" />
+                <Text style={styles.buttonText}>Continuar con Google</Text>
+              </View>
+            </TouchableHighlight>
+          </>
+        ) : (
+          <ActivityIndicator size="large" color="#51C878" />
+        )}
+      </View>
     </SafeAreaView>
   );
 };
@@ -76,8 +89,8 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     color: "#000",
-    fontSize: 15,
-    fontWeight: "400",
+    fontSize: 20,
+    fontWeight: "normal",
     textAlign: "center",
   },
   main: {
@@ -86,17 +99,15 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   button: {
-    backgroundColor: "#fff",
+    backgroundColor: "#51C878",
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 14,
     width: "100%",
-    borderColor: "#51C878",
-    borderWidth: 1,
   },
   buttonText: {
-    color: "rgba(0, 0, 0, 0.64)",
-    fontSize: 20,
+    color: "#fff",
+    fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
   },
