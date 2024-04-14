@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSession } from "@/context/ctx";
 
 const CustomTabBar = ({
   state,
@@ -106,14 +107,51 @@ const CustomTabBar = ({
 };
 
 const MainLayout = () => {
+  const { session } = useSession();
+
   return (
-    <Tabs tabBar={(props) => <CustomTabBar {...props} />}>
+    <Tabs
+      tabBar={(props) => <CustomTabBar {...props} />}
+      screenOptions={{
+        headerTitle: "",
+        headerStyle: {
+          shadowColor: "transparent",
+        },
+        headerRight: () => (
+          <TouchableOpacity
+            style={{ marginRight: 20 }}
+            onPress={() => console.log("hola")}
+          >
+            <Feather name="settings" size={24} color="black" />
+          </TouchableOpacity>
+        ),
+        headerLeft: () => (
+          <Text
+            style={{
+              marginLeft: 20,
+              fontSize: 20,
+              fontWeight: "400",
+            }}
+          >
+            Hola{" "}
+            <Text
+              style={{
+                fontWeight: "700",
+                textTransform: "capitalize",
+              }}
+            >
+              {session?.displayName}
+            </Text>
+            !
+          </Text>
+        ),
+      }}
+    >
       <Tabs.Screen
         name="home"
         options={{
           tabBarLabel: "Inicio",
           title: "home",
-          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -124,17 +162,11 @@ const MainLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="progress"
-        options={{
-          tabBarLabel: "Progreso",
-          title: "activity",
-        }}
-      />
-      <Tabs.Screen
         name="profile"
         options={{
           tabBarLabel: "Perfil",
           title: "user",
+          headerShown: false,
         }}
       />
     </Tabs>
