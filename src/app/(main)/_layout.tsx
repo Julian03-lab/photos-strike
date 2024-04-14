@@ -1,23 +1,151 @@
-import { Tabs, useSegments } from "expo-router";
+import { Feather, Ionicons } from "@expo/vector-icons";
+import { Tabs, useNavigation, useSegments } from "expo-router";
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-const MainLayout = () => {
+const CustomTabBar = ({
+  state,
+  descriptors,
+  navigation,
+}: BottomTabBarProps) => {
+  const { navigate } = useNavigation();
   const segment = useSegments();
 
+  if (segment.length === 3 && segment[2] === "take-photo") {
+    return null;
+  }
+
   return (
-    <Tabs>
+    <View
+      style={{
+        flexDirection: "row",
+        backgroundColor: "#fff",
+        padding: 10,
+        justifyContent: "space-around",
+      }}
+    >
+      {state.routes.map((route, index) => {
+        const { options } = descriptors[route.key];
+
+        const label =
+          options.tabBarLabel !== undefined
+            ? options.tabBarLabel
+            : options.title !== undefined
+            ? options.title
+            : route.name;
+
+        const isFocused = state.index === index;
+
+        const onPress = () => {
+          const event = navigation.emit({
+            type: "tabPress",
+            target: route.key,
+            canPreventDefault: true,
+          });
+
+          if (!isFocused && !event.defaultPrevented) {
+            navigate(route.name as never);
+          }
+        };
+
+        const onLongPress = () => {
+          navigation.emit({
+            type: "tabLongPress",
+            target: route.key,
+          });
+        };
+
+        return (
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityState={isFocused ? { selected: true } : {}}
+            accessibilityLabel={options.tabBarAccessibilityLabel}
+            testID={options.tabBarTestID}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 4,
+            }}
+            key={route.name}
+            activeOpacity={0.5}
+          >
+            {isFocused && (
+              <View
+                style={{
+                  height: 50,
+                  width: 50,
+                  backgroundColor: "#000",
+                  borderRadius: 100,
+                  position: "absolute",
+                  top: 0,
+                }}
+              />
+            )}
+            <Feather
+              name={options.title as any}
+              size={24}
+              color={isFocused ? "#fff" : "#000"}
+              style={isFocused && { position: "absolute", top: 12 }}
+            />
+            <Text style={!isFocused ? styles.text : { color: "transparent" }}>
+              {label as string}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+};
+
+const MainLayout = () => {
+  return (
+    <Tabs tabBar={(props) => <CustomTabBar {...props} />}>
       <Tabs.Screen
         name="home"
         options={{
+          tabBarLabel: "Inicio",
+          title: "home",
           headerShown: false,
-          tabBarStyle: {
-            display: segment.length === 3 ? "none" : "flex",
-          },
         }}
       />
-      <Tabs.Screen name="progress" options={{ title: "Progreso" }} />
-      <Tabs.Screen name="objectives" options={{ headerShown: false }} />
-      <Tabs.Screen name="profile" options={{ title: "Perfil" }} />
+      <Tabs.Screen
+        name="objectives"
+        options={{
+          tabBarLabel: "Objetivos",
+          title: "target",
+        }}
+      />
+      <Tabs.Screen
+        name="progress"
+        options={{
+          tabBarLabel: "Progreso",
+          title: "activity",
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          tabBarLabel: "Perfil",
+          title: "user",
+        }}
+      />
     </Tabs>
   );
 };
 export default MainLayout;
+
+const styles = StyleSheet.create({
+  text: {
+    color: "#000",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+});
