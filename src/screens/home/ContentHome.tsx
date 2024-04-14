@@ -30,7 +30,7 @@ const Card = ({ day, locked = true }: CardProps) => {
       <Text
         style={{
           fontSize: 16,
-          fontWeight: "600",
+          fontFamily: "Poppins_600SemiBold",
         }}
       >
         Dia {day}
@@ -210,25 +210,26 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   helperText: {
-    fontSize: 16,
-    fontWeight: "400",
+    fontSize: 14,
+    fontFamily: "Poppins_400Regular",
     color: "rgba(0,0,0,0.4)",
   },
   title: {
-    fontSize: 45,
-    fontWeight: "100",
+    fontSize: 40,
+    fontFamily: "Poppins_300Light",
   },
   subtitle: {
-    fontSize: 28,
-    fontWeight: "500",
+    fontSize: 32,
+    fontFamily: "Poppins_500Medium",
   },
   selectorText: {
     fontSize: 16,
-    fontWeight: "500",
+    fontFamily: "Poppins_500Medium",
   },
   selector: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     gap: 6,
     paddingHorizontal: 10,
     paddingVertical: 5,

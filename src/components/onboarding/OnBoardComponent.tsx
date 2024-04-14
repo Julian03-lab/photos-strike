@@ -36,18 +36,18 @@ export default OnBoardComponent;
 const styles = StyleSheet.create({
   title: {
     fontSize: 24,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     color: "#000000",
     textAlign: "center",
   },
   subtitle: {
-    fontSize: 15,
-    fontWeight: "400",
+    fontSize: 14,
+    fontFamily: "Poppins_400Regular",
     color: "#000000",
     textAlign: "center",
   },
   textContainer: {
-    paddingHorizontal: 44,
+    paddingHorizontal: 20,
     alignItems: "center",
     gap: 12,
     flex: 0,

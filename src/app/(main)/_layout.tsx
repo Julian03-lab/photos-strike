@@ -130,13 +130,13 @@ const MainLayout = () => {
             style={{
               marginLeft: 20,
               fontSize: 20,
-              fontWeight: "400",
+              fontFamily: "Poppins_400Regular",
             }}
           >
             Hola{" "}
             <Text
               style={{
-                fontWeight: "700",
+                fontFamily: "Poppins_700Bold",
                 textTransform: "capitalize",
               }}
             >
@@ -177,7 +177,7 @@ export default MainLayout;
 const styles = StyleSheet.create({
   text: {
     color: "#000",
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     fontSize: 16,
   },
 });

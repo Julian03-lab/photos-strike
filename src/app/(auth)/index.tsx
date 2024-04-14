@@ -23,6 +23,7 @@ const LoginPage = () => {
         <Text style={styles.subtitle}>Preparate para ver tus avances</Text>
         <View
           style={{
+            marginTop: 20,
             width: 200,
             height: 200,
             backgroundColor: "red",
@@ -84,19 +85,18 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#51C878",
-    fontSize: 64,
-    fontWeight: "bold",
+    fontSize: 60,
+    fontFamily: "Poppins_700Bold",
   },
   subtitle: {
     color: "#000",
     fontSize: 20,
-    fontWeight: "normal",
+    fontFamily: "Poppins_400Regular",
     textAlign: "center",
   },
   main: {
     justifyContent: "center",
     alignItems: "center",
-    gap: 20,
   },
   button: {
     backgroundColor: "#51C878",
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     textAlign: "center",
   },
 });

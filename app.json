@@ -32,7 +32,13 @@
     "plugins": [
       "@react-native-google-signin/google-signin",
       "expo-router",
-      "expo-image-picker"
+      "expo-image-picker",
+      [
+        "expo-font",
+        {
+          "fonts": ["node_modules/@expo-google-fonts/poppins"]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

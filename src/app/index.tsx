@@ -7,8 +7,6 @@ import { View, Text } from "react-native";
 const index = () => {
   const { loading, session } = useSession();
 
-  console.log(session);
-
   async function checkOnBoard() {
     const onBoard = await AsyncStorage.getItem("@viewedOnboarding");
     return router.replace(onBoard ? "/(auth)/" : "/(auth)/OnBoard");

@@ -30,11 +30,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: 45,
-    fontWeight: "100",
+    fontSize: 40,
+    fontFamily: "Poppins_300Light",
+    width: "100%",
   },
   subtitle: {
-    fontSize: 24,
-    fontWeight: "100",
+    fontSize: 20,
+    fontFamily: "Poppins_300Light",
+    width: "100%",
   },
 });

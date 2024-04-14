@@ -38,13 +38,13 @@ export default TurnNotificationsScreen;
 const styles = StyleSheet.create({
   title: {
     fontSize: 24,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     color: "#000000",
     textAlign: "center",
   },
   subtitle: {
     fontSize: 15,
-    fontWeight: "400",
+    fontFamily: "Poppins_400Regular",
     color: "#000000",
     textAlign: "center",
   },
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     textAlign: "center",
   },
   buttonContainer: {
@@ -76,6 +76,6 @@ const styles = StyleSheet.create({
   skip: {
     color: "#51C878",
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
   },
 });

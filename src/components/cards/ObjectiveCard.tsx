@@ -51,19 +51,19 @@ const styles = StyleSheet.create({
   },
   bodyTitle: {
     fontSize: 20,
-    fontWeight: "200",
+    fontFamily: "Poppins_300Light",
   },
   bodySubtitle: {
     fontSize: 20,
-    fontWeight: "500",
+    fontFamily: "Poppins_500Medium",
   },
   footerTitle: {
     fontSize: 18,
-    fontWeight: "500",
+    fontFamily: "Poppins_500Medium",
   },
   footerSubtitle: {
     fontSize: 14,
-    fontWeight: "400",
+    fontFamily: "Poppins_400Regular",
     color: "rgba(0, 0, 0, 0.5)",
   },
   dot: {
