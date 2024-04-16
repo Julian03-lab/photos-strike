@@ -1,4 +1,7 @@
+import CustomPicker from "@/components/buttons/CustomPicker";
+import { Objective } from "@/hooks/useFetchObjectives";
 import { Feather } from "@expo/vector-icons";
+import { useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -11,6 +14,8 @@ type CardProps = {
   day: number;
   locked: boolean;
 };
+
+type Option = { label: string; value: string };
 
 const Card = ({ day, locked = true }: CardProps) => {
   return (
@@ -167,17 +172,28 @@ const cardList = [
   },
 ];
 
-const ContentHome = () => {
+const ContentHome = ({ data }: { data: Objective[] }) => {
+  const [options] = useState<Option[]>(
+    data.map((item) => ({ label: item.title, value: item.title }))
+  );
+
+  const [selectedValue, setSelectedValue] = useState(options[0]);
+
+  const handleValueChange = (value: Option) => {
+    setSelectedValue(value);
+  };
+
   return (
     <FlatList
       ListHeaderComponent={
         <>
           <Text style={styles.title}>Objetivo del dia</Text>
           <View style={styles.bar}>
-            <TouchableOpacity style={styles.selector}>
-              <Text style={styles.selectorText}>Cambio fisico</Text>
-              <Feather name="chevron-down" size={24} />
-            </TouchableOpacity>
+            <CustomPicker
+              options={options}
+              selectedValue={selectedValue}
+              onValueChange={handleValueChange}
+            />
             <Text style={styles.helperText}>4/30 dias</Text>
           </View>
           <Text style={styles.subtitle}>Faltan 12:21 para la foto del dia</Text>
@@ -221,20 +237,5 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 32,
     fontFamily: "Poppins_500Medium",
-  },
-  selectorText: {
-    fontSize: 16,
-    fontFamily: "Poppins_500Medium",
-  },
-  selector: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#51C878",
   },
 });

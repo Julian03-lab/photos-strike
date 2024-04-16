@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { db } from "root/config/firebase";
 
-type Objective = {
+export type Objective = {
   id: string;
   completed: boolean;
   createdAt: string;

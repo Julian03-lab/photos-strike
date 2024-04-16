@@ -6,8 +6,6 @@ import useFetchObjectives from "@/hooks/useFetchObjectives";
 const HomePage = (): React.JSX.Element => {
   const { loading, objectives } = useFetchObjectives();
 
-  console.log(objectives);
-
   if (loading) {
     return (
       <View style={styles.container}>
@@ -18,7 +16,11 @@ const HomePage = (): React.JSX.Element => {
 
   return (
     <View style={styles.container}>
-      {objectives.length > 0 ? <ContentHome /> : <EmptyHome />}
+      {objectives.length > 0 ? (
+        <ContentHome data={objectives} />
+      ) : (
+        <EmptyHome />
+      )}
     </View>
   );
 };
