@@ -1,9 +1,18 @@
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import ObjectiveCard from "@/components/cards/ObjectiveCard";
+import useFetchObjectives from "@/hooks/useFetchObjectives";
 import { Feather } from "@expo/vector-icons";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { router } from "expo-router";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 
 const Objectives = () => {
+  const { loading, objectives } = useFetchObjectives();
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -28,12 +37,28 @@ const Objectives = () => {
       <View style={{ width: "100%", height: 2, backgroundColor: "#51C878" }} />
       <View>
         <Text style={styles.othersTitle}>Otros objetivos:</Text>
-        <SecondaryButton
-          onPress={() => {}}
-          icon={<Feather name="plus-circle" size={24} />}
-        >
-          Agregar objetivo
-        </SecondaryButton>
+        {!loading ? (
+          <>
+            {/* TODO: Añadir la tarjeta individual del objetivo */}
+            {/* {objectives.map((objective) => (
+              <SecondaryButton
+                onPress={() => router.push("/(main)/objectives/new-objective")}
+                icon={<Feather name="plus-circle" size={24} />}
+                key={objective.id}
+              >
+                {objective.title}
+              </SecondaryButton>
+            ))} */}
+            <SecondaryButton
+              onPress={() => router.push("/(main)/objectives/new-objective")}
+              icon={<Feather name="plus-circle" size={24} />}
+            >
+              Agregar objetivo
+            </SecondaryButton>
+          </>
+        ) : (
+          <ActivityIndicator size="large" color="#51C878" />
+        )}
       </View>
     </ScrollView>
   );
@@ -47,7 +72,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   title: {
-    fontSize: 40,
+    fontSize: 36,
     fontFamily: "Poppins_300Light",
   },
   card: {

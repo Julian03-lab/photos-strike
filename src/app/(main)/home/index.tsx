@@ -1,12 +1,24 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import EmptyHome from "@/screens/home/EmptyHome";
 import ContentHome from "@/screens/home/ContentHome";
+import useFetchObjectives from "@/hooks/useFetchObjectives";
 
 const HomePage = (): React.JSX.Element => {
+  const { loading, objectives } = useFetchObjectives();
+
+  console.log(objectives);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <ContentHome />
-      {/* <EmptyHome /> */}
+      {objectives.length > 0 ? <ContentHome /> : <EmptyHome />}
     </View>
   );
 };
