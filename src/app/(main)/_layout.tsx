@@ -127,6 +127,9 @@ const CustomTabBar = ({
 
 const MainLayout = () => {
   const { session } = useSession();
+  const segment = useSegments();
+
+  console.log(segment);
 
   return (
     <Tabs
@@ -171,6 +174,7 @@ const MainLayout = () => {
         options={{
           tabBarLabel: "Inicio",
           title: "home",
+          headerShown: segment[2] === "take-photo" ? false : true,
         }}
       />
       <Tabs.Screen

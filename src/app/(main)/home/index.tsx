@@ -2,9 +2,12 @@ import { View, StyleSheet, ActivityIndicator } from "react-native";
 import EmptyHome from "@/screens/home/EmptyHome";
 import ContentHome from "@/screens/home/ContentHome";
 import useFetchObjectives from "@/hooks/useFetchObjectives";
+import { useRef } from "react";
+import LottieView from "lottie-react-native";
 
 const HomePage = (): React.JSX.Element => {
   const { loading, objectives } = useFetchObjectives();
+  const animation = useRef(null);
 
   console.log("todos: ", objectives);
 
@@ -19,8 +22,19 @@ const HomePage = (): React.JSX.Element => {
   return (
     <View style={styles.container}>
       {objectives.length > 0 ? (
-        <ContentHome objectives={objectives} />
+        <LottieView
+          autoPlay
+          ref={animation}
+          style={{
+            width: 200,
+            height: 200,
+            backgroundColor: "#eee",
+          }}
+          // Find more Lottie files at https://lottiefiles.com/featured
+          source={require("root/assets/animations/locked.json")}
+        />
       ) : (
+        // <ContentHome objectives={objectives} />
         <EmptyHome />
       )}
     </View>

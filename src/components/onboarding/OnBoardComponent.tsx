@@ -1,3 +1,4 @@
+import LottieView from "lottie-react-native";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 
 type OnBoardComponentProps = {

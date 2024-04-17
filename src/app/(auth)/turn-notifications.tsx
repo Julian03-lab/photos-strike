@@ -1,18 +1,25 @@
 import { Link } from "expo-router";
+import LottieView from "lottie-react-native";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { NotificationSvg } from "root/assets/svgs/notificationSvg";
 const TurnNotificationsScreen = () => {
   return (
     <View
       style={{
         alignItems: "center",
-        justifyContent: "center",
-        gap: 60,
+        justifyContent: "space-around",
         flex: 1,
         backgroundColor: "#fff",
       }}
     >
-      <NotificationSvg />
+      <LottieView
+        autoPlay
+        style={{
+          width: "100%",
+          // height: 300,
+          aspectRatio: 1,
+        }}
+        source={require("root/assets/animations/notifications.json")}
+      />
       <View style={styles.textContainer}>
         <Text style={styles.title}>Turn on notifications?</Text>
         <Text style={styles.subtitle}>

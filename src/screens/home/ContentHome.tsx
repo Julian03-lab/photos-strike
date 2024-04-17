@@ -1,4 +1,5 @@
 import CustomPicker from "@/components/buttons/CustomPicker";
+import MiniPhotoCard from "@/components/cards/MiniPhotoCard";
 import formatDate from "@/utils/formatDate";
 import { Objective } from "@/utils/types";
 import { Feather } from "@expo/vector-icons";
@@ -14,75 +15,7 @@ import {
   View,
 } from "react-native";
 
-type CardProps = {
-  index: number;
-  unlocked?: boolean;
-  imageUrl?: string;
-};
-
 type Option = { label: string; value: string };
-
-const Card = ({ index, unlocked = false, imageUrl }: CardProps) => {
-  return (
-    <View
-      style={{
-        width: 100,
-        height: 100,
-        borderRadius: 8,
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 4,
-        borderWidth: 1.5,
-        borderColor: !unlocked ? "rgba(0,0,0,1)" : "#51C878",
-        overflow: "hidden",
-        position: "relative",
-        zIndex: 0,
-      }}
-    >
-      <View
-        style={{
-          width: 100,
-          height: 100,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 0,
-          backgroundColor: imageUrl ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)",
-        }}
-      />
-      {imageUrl && (
-        <Image
-          src={imageUrl}
-          style={{
-            width: 100,
-            height: 100,
-            position: "absolute",
-            top: 0,
-            left: 0,
-            zIndex: -1,
-          }}
-          blurRadius={35}
-          resizeMode="cover"
-        />
-      )}
-      <Text
-        style={{
-          fontSize: 16,
-          fontFamily: "Poppins_600SemiBold",
-          color: imageUrl ? "#fff" : "#000",
-        }}
-      >
-        Dia {index + 1}
-      </Text>
-      {!imageUrl &&
-        (!unlocked ? (
-          <Feather name="lock" size={24} />
-        ) : (
-          <Feather name="unlock" size={24} color={"#51C878"} />
-        ))}
-    </View>
-  );
-};
 
 const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
   const options = useMemo<Option[]>(
@@ -146,7 +79,9 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
       }}
       data={cardsToShow}
       keyExtractor={(_, index) => index.toString()}
-      renderItem={({ item, index }) => <Card index={index} {...item} />}
+      renderItem={({ item, index }) => (
+        <MiniPhotoCard index={index} {...item} />
+      )}
       numColumns={3}
       columnWrapperStyle={{ justifyContent: "center", gap: 10 }}
       ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
