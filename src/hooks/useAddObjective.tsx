@@ -4,16 +4,10 @@ import { useState } from "react";
 import { Alert } from "react-native";
 import { db } from "root/config/firebase";
 import Toast from "react-native-toast-message";
-
-type addObjectivesProps = {
-  objective: string;
-  startingDate: string;
-  endingDate: string;
-  notificationTime: string;
-  // frecuency: number;
-  completed?: boolean;
-  notifications?: boolean;
-};
+import dayjs from "dayjs";
+import formatDate from "@/utils/formatDate";
+import { addObjectivesProps } from "@/utils/types";
+import { useObjectivesStore } from "@/context/store";
 
 const useAddObjective = (
   {
@@ -21,13 +15,14 @@ const useAddObjective = (
     notificationTime,
     objective,
     startingDate,
-    completed = true,
+    completed = false,
     notifications = true,
   }: addObjectivesProps,
   callback: () => void
 ) => {
   const { session } = useSession();
   const [loading, setLoading] = useState(false);
+  const { appendObjectives } = useObjectivesStore();
 
   async function addObjective() {
     if (!objective.trim())
@@ -44,13 +39,18 @@ const useAddObjective = (
       notifications,
       principal: false,
       createdAt: new Date().toISOString(),
+      totalDays: dayjs(formatDate(endingDate)).diff(
+        dayjs(formatDate(startingDate)),
+        "day"
+      ),
+      nextPhotoDate: formatDate(startingDate),
     };
 
     try {
       const uid = session?.uid;
       const userRef = doc(db, `users/${uid}`);
-      await addDoc(collection(userRef, "objectives"), newObjective);
-
+      const id = await addDoc(collection(userRef, "objectives"), newObjective);
+      appendObjectives([{ id: id.id, ...newObjective, files: [] }]);
       Toast.show({
         type: "success",
         text1: "Objetivo agregado con exito",

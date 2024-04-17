@@ -8,6 +8,7 @@ import LabelButton from "@/components/buttons/LabelButton";
 import dayjs from "dayjs";
 import useAddObjective from "@/hooks/useAddObjective";
 import { router } from "expo-router";
+import formatDate from "@/utils/formatDate";
 
 const NewObjective = () => {
   const [objective, setObjective] = useState<string>("");
@@ -96,7 +97,7 @@ const NewObjective = () => {
           minimumDate={new Date()}
         />
         <DateTimePickerModal
-          date={dayjs(endingDate.split("/").reverse().join("-")).toDate()}
+          date={dayjs(formatDate(endingDate)).toDate()}
           display="default"
           isVisible={showPicker === "finishdate"}
           mode="date"
@@ -105,9 +106,7 @@ const NewObjective = () => {
             setEndingDate(dayjs(date).format("DD/MM/YYYY"));
           }}
           onCancel={() => setShowPicker(null)}
-          minimumDate={dayjs(startingDate.split("/").reverse().join("-"))
-            .add(1, "week")
-            .toDate()}
+          minimumDate={dayjs(formatDate(startingDate)).add(1, "week").toDate()}
         />
         <DateTimePickerModal
           date={new Date()}

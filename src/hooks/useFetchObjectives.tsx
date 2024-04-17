@@ -1,29 +1,13 @@
 import { useSession } from "@/context/ctx";
-import {
-  collection,
-  getDocs,
-  orderBy,
-  query,
-  onSnapshot,
-} from "firebase/firestore";
+import { useObjectivesStore } from "@/context/store";
+import { Objective } from "@/utils/types";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "root/config/firebase";
 
-export type Objective = {
-  id: string;
-  completed: boolean;
-  createdAt: string;
-  endingDate: string;
-  notificationTime: string;
-  notifications: boolean;
-  principal: boolean;
-  startingDate: string;
-  title: string;
-};
-
 const useFetchObjectives = () => {
   const { session } = useSession();
-  const [objectives, setObjectives] = useState<Objective[]>([]);
+  const { objectives, setObjectives } = useObjectivesStore();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,14 +16,34 @@ const useFetchObjectives = () => {
       collection(db, `users/${uid}/objectives`),
       orderBy("createdAt", "desc")
     );
-    const unsub = onSnapshot(q, (snapshot) => {
-      setObjectives(
-        snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }))
-      );
-      setLoading(false);
-    });
 
-    return () => unsub();
+    const fetchObjectives = async () => {
+      const q = query(
+        collection(db, `users/${uid}/objectives`),
+        orderBy("createdAt", "desc")
+      );
+      const snapshot = await getDocs(q);
+
+      const objectives = await Promise.all(
+        snapshot.docs.map(async (doc) => {
+          const objectiveData = doc.data();
+          const fileRef = collection(
+            db,
+            `users/${uid}/objectives/${doc.id}/files/`
+          );
+          const files = await getDocs(fileRef);
+          return {
+            id: doc.id,
+            ...objectiveData,
+            files: files.docs.map((doc) => doc.data()),
+          } as Objective;
+        })
+      );
+      setObjectives(objectives);
+      setLoading(false);
+    };
+
+    fetchObjectives();
   }, []);
 
   return { objectives, loading };
