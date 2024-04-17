@@ -13,14 +13,14 @@ const index = () => {
     return router.replace(onBoard ? "/(auth)/" : "/(auth)/OnBoard");
   }
 
-  // useEffect(() => {
-  //   if (loading) return;
-  //   if (session) {
-  //     router.push("/(main)/home");
-  //   } else {
-  //     checkOnBoard();
-  //   }
-  // }, [loading, session]);
+  useEffect(() => {
+    if (loading) return;
+    if (session) {
+      router.push("/(main)/home");
+    } else {
+      checkOnBoard();
+    }
+  }, [loading, session]);
 
   return (
     <View
@@ -32,9 +32,7 @@ const index = () => {
         gap: 40,
       }}
     >
-      <MiniPhotoCard index={1} />
-      <MiniPhotoCard index={1} unlocked />
-      {/* <ActivityIndicator size="large" color="#51C878" /> */}
+      <ActivityIndicator size="large" color="#51C878" />
     </View>
   );
 };
