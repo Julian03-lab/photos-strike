@@ -52,7 +52,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
     setSelectedValue(value);
   };
 
-  // console.log(selectedObjective.startingDate);
+  console.log(nextPhotoDays, cardsToShow);
 
   return (
     <FlatList
@@ -80,7 +80,12 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
       data={cardsToShow}
       keyExtractor={(_, index) => index.toString()}
       renderItem={({ item, index }) => (
-        <MiniPhotoCard index={index} {...item} />
+        <MiniPhotoCard
+          index={index}
+          imageUrl={selectedObjective.files[index]?.url}
+          objectiveId={selectedObjective.id}
+          unlocked={item.unlocked}
+        />
       )}
       numColumns={3}
       columnWrapperStyle={{ justifyContent: "center", gap: 10 }}

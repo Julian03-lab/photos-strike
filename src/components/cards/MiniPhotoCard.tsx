@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Camera } from "expo-camera";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 import { useRef } from "react";
@@ -8,15 +8,37 @@ type CardProps = {
   index: number;
   unlocked?: boolean;
   imageUrl?: string;
+  objectiveId: string;
 };
 
-const MiniPhotoCard = ({ index, unlocked = false, imageUrl }: CardProps) => {
+const MiniPhotoCard = ({
+  index,
+  unlocked = false,
+  imageUrl,
+  objectiveId,
+}: CardProps) => {
   const lockedRef: any = useRef(null);
   const unlockedRef: any = useRef(null);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+  // console.log(permission);
 
-  const handlePress = () => {
+  const handlePress = async () => {
     if (unlocked) {
-      router.push("/(main)/home/take-photo");
+      // if (permission?.canAskAgain === false && permission?.status !== "granted") {
+      //   return Linking.openSettings();
+      // }
+
+      if (permission?.status === "granted") {
+        router.push({ pathname: "/home/take-photo", params: { objectiveId } });
+      } else {
+        const result = await requestPermission();
+        if (result.status === "granted") {
+          router.push({
+            pathname: "/home/take-photo",
+            params: { objectiveId },
+          });
+        }
+      }
     } else {
       lockedRef.current.play();
     }
