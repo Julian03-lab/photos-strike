@@ -45,6 +45,7 @@ const ContextMenu = ({
   });
 
   const handleLayout = () => {
+    if (!underMenu) return;
     if (!menuRef.current) return;
     menuRef.current.measure((_x, _y, _w, h) => {
       if (positionY > h) {
@@ -102,7 +103,7 @@ const ContextMenu = ({
                       backgroundColor: "#fff",
                       borderRadius: 10,
                       alignSelf: "flex-end",
-                      width: "60%",
+                      width: "100%",
                     },
                     menuMargin,
                   ]}
