@@ -20,17 +20,11 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
   const [handleUpdate, loadingUpdate] = useUpdateDoc();
   const [menuVisible, setMenuVisible] = useState(false);
   const [faved, setFaved] = useState(objective.principal || false);
-  const cardRef = useRef<View>(null);
-  const [positionY, setPositionY] = useState(0);
+  // const cardRef = useRef<View>(null);
+  // const [positionY, setPositionY] = useState(0);
 
   const closeMenu = () => setMenuVisible(false);
-  const openMenu = () => {
-    if (!cardRef.current) return setMenuVisible(!menuVisible);
-    cardRef.current.measureInWindow((_x, y) => {
-      setPositionY(y);
-      setMenuVisible(!menuVisible);
-    });
-  };
+  const openMenu = () => setMenuVisible(true);
 
   const handleFavorite = () => {
     setFaved(!faved);
@@ -102,11 +96,10 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
       options={options}
       menuVisible={menuVisible}
       closeMenu={closeMenu}
-      underMenu={<Card openMenu={openMenu} />}
-      positionY={positionY}
+      // underMenu={<Card openMenu={openMenu} />}
       disabled={loadingDelete || loadingUpdate}
     >
-      <Card openMenu={openMenu} cardRef={cardRef} />
+      <Card openMenu={openMenu} />
     </ContextMenu>
   );
 };

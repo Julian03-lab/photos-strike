@@ -22,8 +22,6 @@ type ContextMenuProps = {
   menuVisible: boolean;
   closeMenu: () => void;
   children: JSX.Element;
-  underMenu?: JSX.Element;
-  positionY?: number;
   disabled?: boolean;
 };
 
@@ -32,8 +30,6 @@ const ContextMenu = ({
   menuVisible,
   closeMenu,
   children,
-  underMenu,
-  positionY = 0,
   disabled,
 }: ContextMenuProps) => {
   const MENU_BOTTOM_MARGIN = 20;
@@ -43,9 +39,10 @@ const ContextMenu = ({
     marginBottom: MENU_BOTTOM_MARGIN,
     marginTop: 0,
   });
+  const viewRef = useRef<View>(null);
+  const [positionY, setPositionY] = useState(0);
 
   const handleLayout = () => {
-    if (!underMenu) return;
     if (!menuRef.current) return;
     menuRef.current.measure((_x, _y, _w, h) => {
       if (positionY > h) {
@@ -58,9 +55,23 @@ const ContextMenu = ({
     });
   };
 
+  const handleViewLayout = () => {
+    if (!viewRef.current) return;
+    viewRef.current.measureInWindow((_x, y, _w, _h) => {
+      // console.log("pos y: ", y);
+      setPositionY(y);
+    });
+  };
+
+  useEffect(() => {
+    handleViewLayout();
+  }, [menuVisible]);
+
   return (
     <View>
-      {children}
+      <View ref={viewRef} onLayout={handleViewLayout}>
+        {children}
+      </View>
       <Modal
         visible={menuVisible}
         transparent={true}
@@ -68,19 +79,12 @@ const ContextMenu = ({
         onRequestClose={closeMenu}
       >
         <TouchableWithoutFeedback onPress={closeMenu}>
-          <View
-            style={[
-              styles.centeredView,
-              underMenu && positionY
-                ? { justifyContent: "flex-start" }
-                : { justifyContent: "center" },
-            ]}
-          >
+          <View style={[styles.centeredView, { justifyContent: "flex-start" }]}>
             <Pressable
               style={{
                 position: "relative",
                 top:
-                  underMenu && positionY < menuHeight
+                  positionY < menuHeight
                     ? positionY
                     : positionY - menuHeight - MENU_BOTTOM_MARGIN,
               }}
@@ -89,9 +93,7 @@ const ContextMenu = ({
                 style={{
                   width: "100%",
                   flexDirection:
-                    underMenu && positionY < menuHeight
-                      ? "column-reverse"
-                      : "column",
+                    positionY < menuHeight ? "column-reverse" : "column",
                 }}
               >
                 <View
@@ -131,7 +133,7 @@ const ContextMenu = ({
                     </Fragment>
                   ))}
                 </View>
-                {underMenu || children}
+                {children}
               </View>
             </Pressable>
           </View>
