@@ -1,4 +1,5 @@
 import SecondaryButton from "@/components/buttons/SecondaryButton";
+import IndividualObjectiveCard from "@/components/cards/IndividualObjectiveCard";
 import ObjectiveCard from "@/components/cards/ObjectiveCard";
 import useFetchObjectives from "@/hooks/useFetchObjectives";
 import { Feather } from "@expo/vector-icons";
@@ -38,7 +39,11 @@ const Objectives = () => {
       <View>
         <Text style={styles.othersTitle}>Otros objetivos:</Text>
         {!loading ? (
-          <>
+          <View
+            style={{
+              gap: 20,
+            }}
+          >
             {/* TODO: Añadir la tarjeta individual del objetivo */}
             {/* {objectives.map((objective) => (
               <SecondaryButton
@@ -49,13 +54,14 @@ const Objectives = () => {
                 {objective.title}
               </SecondaryButton>
             ))} */}
+            <IndividualObjectiveCard />
             <SecondaryButton
               onPress={() => router.push("/(main)/objectives/new-objective")}
               icon={<Feather name="plus-circle" size={24} />}
             >
               Agregar objetivo
             </SecondaryButton>
-          </>
+          </View>
         ) : (
           <ActivityIndicator size="large" color="#51C878" />
         )}

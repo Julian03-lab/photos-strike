@@ -12,35 +12,37 @@ const useFetchObjectives = () => {
 
   useEffect(() => {
     const uid = session?.uid as string;
-    const q = query(
-      collection(db, `users/${uid}/objectives`),
-      orderBy("createdAt", "desc")
-    );
 
     const fetchObjectives = async () => {
-      const q = query(
-        collection(db, `users/${uid}/objectives`),
-        orderBy("createdAt", "desc")
-      );
-      const snapshot = await getDocs(q);
+      try {
+        const q = query(
+          collection(db, `users/${uid}/objectives`),
+          orderBy("createdAt", "desc")
+        );
+        const snapshot = await getDocs(q);
 
-      const objectives = await Promise.all(
-        snapshot.docs.map(async (doc) => {
-          const objectiveData = doc.data();
-          const fileRef = collection(
-            db,
-            `users/${uid}/objectives/${doc.id}/files/`
-          );
-          const files = await getDocs(fileRef);
-          return {
-            id: doc.id,
-            ...objectiveData,
-            files: files.docs.map((doc) => doc.data()),
-          } as Objective;
-        })
-      );
-      setObjectives(objectives);
-      setLoading(false);
+        const objectives = await Promise.all(
+          snapshot.docs.map(async (doc) => {
+            const objectiveData = doc.data();
+            const fileRef = collection(
+              db,
+              `users/${uid}/objectives/${doc.id}/files/`
+            );
+            const files = await getDocs(fileRef);
+            return {
+              id: doc.id,
+              ...objectiveData,
+              files: files.docs.map((doc) => doc.data()),
+            } as Objective;
+          })
+        );
+        setObjectives(objectives);
+        setLoading(false);
+      } catch (error) {
+        setObjectives([]);
+        console.log("Error fetching objectives", error);
+        setLoading(false);
+      }
     };
 
     fetchObjectives();

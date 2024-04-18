@@ -22,19 +22,8 @@ const HomePage = (): React.JSX.Element => {
   return (
     <View style={styles.container}>
       {objectives.length > 0 ? (
-        <LottieView
-          autoPlay
-          ref={animation}
-          style={{
-            width: 200,
-            height: 200,
-            backgroundColor: "#eee",
-          }}
-          // Find more Lottie files at https://lottiefiles.com/featured
-          source={require("root/assets/animations/locked.json")}
-        />
+        <ContentHome objectives={objectives} />
       ) : (
-        // <ContentHome objectives={objectives} />
         <EmptyHome />
       )}
     </View>
