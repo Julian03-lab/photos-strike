@@ -32,19 +32,28 @@ const ContextMenu = ({
   closeMenu,
   children,
   underMenu,
-  positionY,
+  positionY = 0,
 }: ContextMenuProps) => {
   // const MENU_HEIGHT = 183;
   const MENU_BOTTOM_MARGIN = 20;
 
   const menuRef = useRef<View>(null);
   const [menuHeight, setMenuHeight] = useState(0);
+  const [menuMargin, setMenuMargin] = useState({
+    marginBottom: MENU_BOTTOM_MARGIN,
+    marginTop: 0,
+  });
 
   const handleLayout = () => {
     if (!menuRef.current) return;
     menuRef.current.measure((_x, _y, _w, h) => {
-      console.log("3: ", h);
-      setMenuHeight(h + MENU_BOTTOM_MARGIN);
+      if (positionY > h) {
+        setMenuHeight(h);
+        setMenuMargin({ marginBottom: MENU_BOTTOM_MARGIN, marginTop: 0 });
+      } else {
+        setMenuHeight(h);
+        setMenuMargin({ marginTop: MENU_BOTTOM_MARGIN, marginBottom: 0 });
+      }
     });
   };
 
@@ -69,43 +78,57 @@ const ContextMenu = ({
             <Pressable
               style={{
                 position: "relative",
-                top: underMenu && positionY ? positionY - menuHeight : 0,
+                top:
+                  underMenu && positionY < menuHeight
+                    ? positionY
+                    : positionY - menuHeight - MENU_BOTTOM_MARGIN,
               }}
             >
               <View
-                ref={menuRef}
-                onLayout={handleLayout}
                 style={{
-                  position: "relative",
-                  backgroundColor: "#fff",
-                  borderRadius: 10,
-                  marginBottom: MENU_BOTTOM_MARGIN,
-                  alignSelf: "flex-end",
+                  flexDirection:
+                    underMenu && positionY < menuHeight
+                      ? "column-reverse"
+                      : "column",
                 }}
               >
-                {options.map((option, index) => (
-                  <Fragment key={index}>
-                    <TouchableOpacity
-                      style={styles.optionButton}
-                      activeOpacity={0.5}
-                      onPress={option.onPress}
-                    >
-                      <Text
-                        style={[
-                          styles.option,
-                          option.textColor
-                            ? { color: option.textColor }
-                            : { color: "#000" },
-                        ]}
+                <View
+                  ref={menuRef}
+                  onLayout={handleLayout}
+                  style={[
+                    {
+                      position: "relative",
+                      backgroundColor: "#fff",
+                      borderRadius: 10,
+                      alignSelf: "flex-end",
+                    },
+                    menuMargin,
+                  ]}
+                >
+                  {options.map((option, index) => (
+                    <Fragment key={index}>
+                      <TouchableOpacity
+                        style={styles.optionButton}
+                        activeOpacity={0.5}
+                        onPress={option.onPress}
                       >
-                        {option.label}
-                      </Text>
-                      {option.icon}
-                    </TouchableOpacity>
-                  </Fragment>
-                ))}
+                        <Text
+                          style={[
+                            styles.option,
+                            option.textColor
+                              ? { color: option.textColor }
+                              : { color: "#000" },
+                          ]}
+                        >
+                          {option.label}
+                        </Text>
+                        {option.icon}
+                      </TouchableOpacity>
+                    </Fragment>
+                  ))}
+                </View>
+                {underMenu || children}
               </View>
-              {underMenu || children}
             </Pressable>
           </View>
         </TouchableWithoutFeedback>

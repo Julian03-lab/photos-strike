@@ -45,16 +45,13 @@ const Objectives = () => {
             }}
           >
             {/* TODO: Añadir la tarjeta individual del objetivo */}
-            {/* {objectives.map((objective) => (
-              <SecondaryButton
-                onPress={() => router.push("/(main)/objectives/new-objective")}
-                icon={<Feather name="plus-circle" size={24} />}
+            {objectives.map((objective) => (
+              <IndividualObjectiveCard
                 key={objective.id}
-              >
-                {objective.title}
-              </SecondaryButton>
-            ))} */}
-            <IndividualObjectiveCard />
+                title={objective.title}
+                subtitle={`${objective.files.length}/${objective.totalDays} dias`}
+              />
+            ))}
             <SecondaryButton
               onPress={() => router.push("/(main)/objectives/new-objective")}
               icon={<Feather name="plus-circle" size={24} />}

@@ -13,34 +13,13 @@ import {
 } from "react-native";
 import ContextMenu from "../buttons/ContextMenu";
 
-const Card = ({
-  openMenu,
-  cardRef,
+const IndividualObjectiveCard = ({
+  title,
+  subtitle,
 }: {
-  openMenu: () => void;
-  cardRef?: React.RefObject<View>;
-}) => (
-  <Pressable style={styles.container} onLongPress={openMenu} ref={cardRef}>
-    <View
-      style={{
-        flexDirection: "row",
-        gap: 10,
-        alignItems: "center",
-        paddingHorizontal: 16,
-      }}
-    >
-      <Text style={styles.title}>Cambio fisico</Text>
-      <Text style={styles.subtitle}>4/30 dias</Text>
-    </View>
-    {
-      <TouchableOpacity style={{ padding: 20 }} onPress={openMenu}>
-        <Feather name="sliders" size={24} />
-      </TouchableOpacity>
-    }
-  </Pressable>
-);
-
-const IndividualObjectiveCard = () => {
+  title: string;
+  subtitle: string;
+}) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [faved, setFaved] = useState(false);
   const cardRef = useRef<View>(null);
@@ -58,6 +37,33 @@ const IndividualObjectiveCard = () => {
   const handleFav = () => {
     setFaved(!faved);
   };
+
+  const Card = ({
+    openMenu,
+    cardRef,
+  }: {
+    openMenu: () => void;
+    cardRef?: React.RefObject<View>;
+  }) => (
+    <Pressable style={styles.container} onLongPress={openMenu} ref={cardRef}>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 10,
+          alignItems: "center",
+          paddingHorizontal: 16,
+        }}
+      >
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.subtitle}>{subtitle}</Text>
+      </View>
+      {
+        <TouchableOpacity style={{ padding: 20 }} onPress={openMenu}>
+          <Feather name="sliders" size={24} />
+        </TouchableOpacity>
+      }
+    </Pressable>
+  );
 
   const options = [
     {
