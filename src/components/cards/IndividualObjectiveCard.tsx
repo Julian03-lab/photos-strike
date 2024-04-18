@@ -15,11 +15,13 @@ import {
 import ContextMenu from "../buttons/ContextMenu";
 import { Objective } from "@/utils/types";
 import useDeleteDoc from "@/hooks/useDeleteDoc";
+import useUpdateDoc from "@/hooks/useUpdateDoc";
 
 const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
-  const { handleDelete, loading } = useDeleteDoc();
+  const [handleDelete, loadingDelete] = useDeleteDoc();
+  const [handleUpdate, loadingUpdate] = useUpdateDoc();
   const [menuVisible, setMenuVisible] = useState(false);
-  const [faved, setFaved] = useState(false);
+  const [faved, setFaved] = useState(objective.principal || false);
   const cardRef = useRef<View>(null);
   const [positionY, setPositionY] = useState(0);
 
@@ -30,6 +32,11 @@ const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
       setPositionY(y);
       setMenuVisible(!menuVisible);
     });
+  };
+
+  const handleFavorite = () => {
+    setFaved(!faved);
+    handleUpdate(objective.id, { principal: !faved });
   };
 
   const Card = ({
@@ -65,15 +72,15 @@ const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
     {
       label: faved ? "Destacado" : "Destacar",
       icon: <FontAwesome name={faved ? "star" : "star-o"} size={24} />,
-      // onPress: handleFav,
+      onPress: handleFavorite,
     },
     {
       label: "Editar",
       icon: <Feather name={"edit"} size={24} />,
     },
     {
-      label: loading ? "Eliminando" : "Eliminar",
-      icon: loading ? (
+      label: loadingDelete ? "Eliminando" : "Eliminar",
+      icon: loadingDelete ? (
         <ActivityIndicator size={24} color={"red"} />
       ) : (
         <Feather name={"trash"} size={24} color={"red"} />
@@ -90,7 +97,7 @@ const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
       closeMenu={closeMenu}
       underMenu={<Card openMenu={openMenu} />}
       positionY={positionY}
-      disabled={loading}
+      disabled={loadingDelete || loadingUpdate}
     >
       <Card openMenu={openMenu} cardRef={cardRef} />
     </ContextMenu>

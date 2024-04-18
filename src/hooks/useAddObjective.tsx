@@ -62,7 +62,6 @@ const useAddObjective = (
       Toast.show({
         type: "error",
         text1: "Error al agregar el objetivo",
-        topOffset: 10,
       });
     } finally {
       setLoading(false);
