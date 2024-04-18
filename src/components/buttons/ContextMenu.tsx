@@ -24,6 +24,7 @@ type ContextMenuProps = {
   children: JSX.Element;
   underMenu?: JSX.Element;
   positionY?: number;
+  disabled?: boolean;
 };
 
 const ContextMenu = ({
@@ -33,10 +34,9 @@ const ContextMenu = ({
   children,
   underMenu,
   positionY = 0,
+  disabled,
 }: ContextMenuProps) => {
-  // const MENU_HEIGHT = 183;
   const MENU_BOTTOM_MARGIN = 20;
-
   const menuRef = useRef<View>(null);
   const [menuHeight, setMenuHeight] = useState(0);
   const [menuMargin, setMenuMargin] = useState({
@@ -86,6 +86,7 @@ const ContextMenu = ({
             >
               <View
                 style={{
+                  width: "100%",
                   flexDirection:
                     underMenu && positionY < menuHeight
                       ? "column-reverse"
@@ -101,6 +102,7 @@ const ContextMenu = ({
                       backgroundColor: "#fff",
                       borderRadius: 10,
                       alignSelf: "flex-end",
+                      width: "60%",
                     },
                     menuMargin,
                   ]}
@@ -111,6 +113,7 @@ const ContextMenu = ({
                         style={styles.optionButton}
                         activeOpacity={0.5}
                         onPress={option.onPress}
+                        disabled={disabled}
                       >
                         <Text
                           style={[

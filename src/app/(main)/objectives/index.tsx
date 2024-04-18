@@ -48,8 +48,7 @@ const Objectives = () => {
             {objectives.map((objective) => (
               <IndividualObjectiveCard
                 key={objective.id}
-                title={objective.title}
-                subtitle={`${objective.files.length}/${objective.totalDays} dias`}
+                objective={objective}
               />
             ))}
             <SecondaryButton

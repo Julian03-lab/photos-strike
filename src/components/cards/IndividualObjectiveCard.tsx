@@ -2,6 +2,7 @@ import { Feather, FontAwesome } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
 import { Fragment, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   GestureResponderEvent,
   Modal,
   Pressable,
@@ -12,14 +13,11 @@ import {
   View,
 } from "react-native";
 import ContextMenu from "../buttons/ContextMenu";
+import { Objective } from "@/utils/types";
+import useDeleteDoc from "@/hooks/useDeleteDoc";
 
-const IndividualObjectiveCard = ({
-  title,
-  subtitle,
-}: {
-  title: string;
-  subtitle: string;
-}) => {
+const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
+  const { handleDelete, loading } = useDeleteDoc();
   const [menuVisible, setMenuVisible] = useState(false);
   const [faved, setFaved] = useState(false);
   const cardRef = useRef<View>(null);
@@ -32,10 +30,6 @@ const IndividualObjectiveCard = ({
       setPositionY(y);
       setMenuVisible(!menuVisible);
     });
-  };
-
-  const handleFav = () => {
-    setFaved(!faved);
   };
 
   const Card = ({
@@ -54,8 +48,10 @@ const IndividualObjectiveCard = ({
           paddingHorizontal: 16,
         }}
       >
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        <Text style={styles.title}>{objective.title}</Text>
+        <Text style={styles.subtitle}>
+          {objective.files.length}/{objective.totalDays} dias
+        </Text>
       </View>
       {
         <TouchableOpacity style={{ padding: 20 }} onPress={openMenu}>
@@ -69,16 +65,21 @@ const IndividualObjectiveCard = ({
     {
       label: faved ? "Destacado" : "Destacar",
       icon: <FontAwesome name={faved ? "star" : "star-o"} size={24} />,
-      onPress: handleFav,
+      // onPress: handleFav,
     },
     {
       label: "Editar",
       icon: <Feather name={"edit"} size={24} />,
     },
     {
-      label: "Eliminar",
-      icon: <Feather name={"trash"} size={24} color={"red"} />,
+      label: loading ? "Eliminando" : "Eliminar",
+      icon: loading ? (
+        <ActivityIndicator size={24} color={"red"} />
+      ) : (
+        <Feather name={"trash"} size={24} color={"red"} />
+      ),
       textColor: "red",
+      onPress: () => handleDelete(objective.id),
     },
   ];
 
@@ -89,6 +90,7 @@ const IndividualObjectiveCard = ({
       closeMenu={closeMenu}
       underMenu={<Card openMenu={openMenu} />}
       positionY={positionY}
+      disabled={loading}
     >
       <Card openMenu={openMenu} cardRef={cardRef} />
     </ContextMenu>
