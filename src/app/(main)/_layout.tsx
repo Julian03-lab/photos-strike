@@ -129,7 +129,7 @@ const MainLayout = () => {
   const { session } = useSession();
   const segment = useSegments();
 
-  console.log(segment);
+  // console.log(segment);
 
   return (
     <Tabs

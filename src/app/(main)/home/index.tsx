@@ -9,7 +9,7 @@ const HomePage = (): React.JSX.Element => {
   const { loading, objectives } = useFetchObjectives();
   const animation = useRef(null);
 
-  console.log("todos: ", objectives);
+  // console.log("todos: ", objectives);
 
   if (loading) {
     return (

@@ -1,17 +1,26 @@
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import {
+  GestureResponderEvent,
   Modal,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import ContextMenu from "../buttons/ContextMenu";
 
-const Card = ({ openMenu }) => (
-  <View style={styles.container}>
+const Card = ({
+  openMenu,
+  cardRef,
+}: {
+  openMenu: () => void;
+  cardRef?: React.RefObject<View>;
+}) => (
+  <Pressable style={styles.container} onLongPress={openMenu} ref={cardRef}>
     <View
       style={{
         flexDirection: "row",
@@ -23,17 +32,28 @@ const Card = ({ openMenu }) => (
       <Text style={styles.title}>Cambio fisico</Text>
       <Text style={styles.subtitle}>4/30 dias</Text>
     </View>
-    <TouchableOpacity style={{ padding: 20 }} onPress={openMenu}>
-      <Feather name="sliders" size={24} />
-    </TouchableOpacity>
-  </View>
+    {
+      <TouchableOpacity style={{ padding: 20 }} onPress={openMenu}>
+        <Feather name="sliders" size={24} />
+      </TouchableOpacity>
+    }
+  </Pressable>
 );
 
 const IndividualObjectiveCard = () => {
   const [menuVisible, setMenuVisible] = useState(false);
-  const openMenu = () => setMenuVisible(true);
-  const closeMenu = () => setMenuVisible(false);
   const [faved, setFaved] = useState(false);
+  const cardRef = useRef<View>(null);
+  const [positionY, setPositionY] = useState(0);
+
+  const closeMenu = () => setMenuVisible(false);
+  const openMenu = () => {
+    if (!cardRef.current) return setMenuVisible(!menuVisible);
+    cardRef.current.measureInWindow((_x, y) => {
+      setPositionY(y);
+      setMenuVisible(!menuVisible);
+    });
+  };
 
   const handleFav = () => {
     setFaved(!faved);
@@ -51,62 +71,21 @@ const IndividualObjectiveCard = () => {
     },
     {
       label: "Eliminar",
-      icon: <Feather name={"trash"} size={24} />,
+      icon: <Feather name={"trash"} size={24} color={"red"} />,
+      textColor: "red",
     },
   ];
 
   return (
-    <View>
-      <Card openMenu={openMenu} />
-      <Modal
-        visible={menuVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={closeMenu}
-      >
-        <TouchableWithoutFeedback onPress={closeMenu}>
-          <View style={styles.centeredView}>
-            <TouchableWithoutFeedback>
-              <View>
-                <View
-                  style={{
-                    position: "absolute",
-                    backgroundColor: "#fff",
-                    right: 0,
-                    bottom: "100%",
-                    borderRadius: 10,
-                    marginBottom: 20,
-                  }}
-                >
-                  {options.map((option, index) => (
-                    <Fragment key={index}>
-                      <TouchableOpacity
-                        style={styles.optionButton}
-                        activeOpacity={0.5}
-                        onPress={option.onPress}
-                      >
-                        <Text style={styles.option}>{option.label}</Text>
-                        {option.icon}
-                      </TouchableOpacity>
-                      {index < options.length - 1 && (
-                        <View
-                          style={{
-                            width: "100%",
-                            height: 1,
-                            backgroundColor: "#ccc",
-                          }}
-                        />
-                      )}
-                    </Fragment>
-                  ))}
-                </View>
-                <Card openMenu={openMenu} />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    </View>
+    <ContextMenu
+      options={options}
+      menuVisible={menuVisible}
+      closeMenu={closeMenu}
+      underMenu={<Card openMenu={openMenu} />}
+      positionY={positionY}
+    >
+      <Card openMenu={openMenu} cardRef={cardRef} />
+    </ContextMenu>
   );
 };
 export default IndividualObjectiveCard;
@@ -118,6 +97,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    width: "100%",
   },
   title: {
     fontSize: 18,
