@@ -6,6 +6,7 @@ interface ObjectivesStore {
   setObjectives: (objectives: Objective[]) => void;
   appendObjectives: (objectives: Objective[]) => void;
   removeObjective: (objectiveId: string) => void;
+  updateObjective: (objectiveId: string, newData: any) => void;
 }
 
 export const useObjectivesStore = create<ObjectivesStore>((set) => ({
@@ -17,6 +18,12 @@ export const useObjectivesStore = create<ObjectivesStore>((set) => ({
     set((state) => ({
       objectives: state.objectives.filter(
         (objective) => objective.id !== objectiveId
+      ),
+    })),
+  updateObjective: (objectiveId, newData) =>
+    set((state) => ({
+      objectives: state.objectives.map((objective) =>
+        objective.id === objectiveId ? { ...objective, ...newData } : objective
       ),
     })),
 }));

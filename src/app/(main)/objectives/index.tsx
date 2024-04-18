@@ -4,6 +4,7 @@ import ObjectiveCard from "@/components/cards/ObjectiveCard";
 import useFetchObjectives from "@/hooks/useFetchObjectives";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useMemo } from "react";
 import {
   View,
   Text,
@@ -14,37 +15,38 @@ import {
 
 const Objectives = () => {
   const { loading, objectives } = useFetchObjectives();
+
+  const mainObjectives = useMemo(
+    () => objectives.filter((objective) => objective.principal),
+    [objectives]
+  );
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
       style={{ flex: 1, backgroundColor: "#fff" }}
     >
+      {mainObjectives.length > 0 && (
+        <>
+          <View>
+            <Text style={styles.title}>Objetivos Principales</Text>
+          </View>
+          {mainObjectives.map((objective) => (
+            <ObjectiveCard key={objective.id} objective={objective} />
+          ))}
+          <View
+            style={{ width: "100%", height: 2, backgroundColor: "#51C878" }}
+          />
+        </>
+      )}
       <View>
-        <Text style={styles.title}>Continua tus</Text>
-        <Text style={[styles.title, { fontFamily: "Poppins_500Medium" }]}>
-          objetivos
-        </Text>
-      </View>
-      <ObjectiveCard />
-      <SecondaryButton
-        onPress={() => {}}
-        icon={<Feather name="camera" size={24} />}
-        iconPosition="left"
-        textStyles={{ fontFamily: "Poppins_500Medium", fontSize: 20 }}
-        disabled
-      >
-        11:24 hasta siguiente foto
-      </SecondaryButton>
-      <View style={{ width: "100%", height: 2, backgroundColor: "#51C878" }} />
-      <View>
-        <Text style={styles.othersTitle}>Otros objetivos:</Text>
+        <Text style={styles.othersTitle}>Todos los objetivos:</Text>
         {!loading ? (
           <View
             style={{
               gap: 20,
             }}
           >
-            {/* TODO: Añadir la tarjeta individual del objetivo */}
             {objectives.map((objective) => (
               <IndividualObjectiveCard
                 key={objective.id}
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 36,
-    fontFamily: "Poppins_300Light",
+    fontFamily: "Poppins_500Medium",
   },
   card: {
     backgroundColor: "green",

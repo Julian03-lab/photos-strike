@@ -1,15 +1,19 @@
+import { Objective } from "@/utils/types";
 import { StyleSheet, Text, View } from "react-native";
 
 const dots = Array.from({ length: 12 }, (_, i) => i);
 
-const ObjectiveCard = () => (
+const ObjectiveCard = ({ objective }: { objective: Objective }) => (
   <View>
     <View style={styles.cardBody}>
-      <Text style={styles.bodyTitle}>Sabado 13 de abril</Text>
+      {/* <Text style={styles.bodyTitle}>
+        Comenzado el: {objective.startingDate}
+      </Text> */}
       <View
         style={{
           flexDirection: "row",
           gap: 12,
+          marginTop: 20,
         }}
       >
         {dots.map((_, i) => (
@@ -22,8 +26,10 @@ const ObjectiveCard = () => (
       <Text style={styles.bodySubtitle}>🔥 Racha de 4 dias</Text>
     </View>
     <View style={styles.cardFooter}>
-      <Text style={styles.footerTitle}>Cambio fisico</Text>
-      <Text style={styles.footerSubtitle}>4/30 dias</Text>
+      <Text style={styles.footerTitle}>{objective.title}</Text>
+      <Text style={styles.footerSubtitle}>
+        {objective.files.length}/{objective.totalDays} dias
+      </Text>
     </View>
   </View>
 );

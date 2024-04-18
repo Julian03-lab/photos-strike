@@ -10,7 +10,7 @@ const useUpdateDoc = (): [
   boolean
 ] => {
   const { session } = useSession();
-  //   const { removeObjective } = useObjectivesStore();
+  const { updateObjective } = useObjectivesStore();
 
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +21,7 @@ const useUpdateDoc = (): [
         doc(db, `users/${session?.uid}/objectives/${documentId}`),
         newData
       );
+      updateObjective(documentId, newData);
     } catch (error) {
       console.log(error);
     } finally {
