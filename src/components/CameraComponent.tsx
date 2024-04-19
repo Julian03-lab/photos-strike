@@ -33,11 +33,11 @@ const PhotoPreview = ({
   onClose: () => void;
   objectiveId: string;
 }) => {
-  const { saveImage, loading } = useSubmitPhoto();
+  const { saveImage, loading } = useSubmitPhoto(objectiveId);
   const [submited, setSubmited] = useState(false);
 
   const handleSend = async () => {
-    await saveImage(image, objectiveId, () => setSubmited(true));
+    await saveImage(image, () => setSubmited(true));
   };
 
   useEffect(() => {

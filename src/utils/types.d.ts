@@ -3,6 +3,7 @@ export type Objective = {
   completed: boolean;
   createdAt: string;
   endingDate: string;
+  lastPhotoDate: string | null;
   notificationTime: string;
   notifications: boolean;
   principal: boolean;

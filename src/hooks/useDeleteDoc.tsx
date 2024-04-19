@@ -1,6 +1,6 @@
 import { useSession } from "@/context/ctx";
 import { useObjectivesStore } from "@/context/store";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, writeBatch } from "firebase/firestore";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
 import { db } from "root/config/firebase";
@@ -14,9 +14,12 @@ const useDeleteDoc = (): [(documentId: string) => Promise<void>, boolean] => {
   const handleDelete = async (documentId: string) => {
     try {
       setLoading(true);
-      await deleteDoc(
-        doc(db, `users/${session?.uid}/objectives/${documentId}`)
+      const batch = writeBatch(db);
+      batch.delete(doc(db, `users/${session?.uid}/objectives/${documentId}`));
+      batch.delete(
+        doc(db, `users/${session?.uid}/objectives/${documentId}/files`)
       );
+      await batch.commit();
       setTimeout(() => {
         removeObjective(documentId);
         setLoading(false);

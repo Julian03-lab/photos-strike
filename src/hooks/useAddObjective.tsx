@@ -43,7 +43,7 @@ const useAddObjective = (
         dayjs(formatDate(startingDate)),
         "day"
       ),
-      nextPhotoDate: formatDate(startingDate),
+      lastPhotoDate: null,
     };
 
     try {
