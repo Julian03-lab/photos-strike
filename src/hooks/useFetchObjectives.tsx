@@ -15,19 +15,20 @@ const useFetchObjectives = () => {
 
     const fetchObjectives = async () => {
       try {
-        const q = query(
+        const queryObjectives = query(
           collection(db, `users/${uid}/objectives`),
           orderBy("createdAt", "desc")
         );
-        const snapshot = await getDocs(q);
+        const snapshot = await getDocs(queryObjectives);
 
         const objectives = await Promise.all(
           snapshot.docs.map(async (doc) => {
-            const objectiveData = doc.data();
-            const fileRef = collection(
-              db,
-              `users/${uid}/objectives/${doc.id}/files/`
+            const queryFiles = query(
+              collection(db, `users/${uid}/objectives/${doc.id}/files/`),
+              orderBy("createdAt", "asc")
             );
+            const objectiveData = doc.data();
+            const fileRef = queryFiles;
             const files = await getDocs(fileRef);
             return {
               id: doc.id,

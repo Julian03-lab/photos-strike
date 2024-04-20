@@ -1,5 +1,7 @@
 import { useSession } from "@/context/ctx";
 import { useObjectivesStore } from "@/context/store";
+import formatDate from "@/utils/formatDate";
+import { Objective } from "@/utils/types";
 import dayjs from "dayjs";
 import { CameraCapturedPicture } from "expo-camera";
 import { router } from "expo-router";
@@ -15,7 +17,7 @@ const useSubmitPhoto = (objectiveId: string) => {
 
   const actualObjective = objectives.find(
     (objective) => objective.id === objectiveId
-  );
+  ) as Objective;
 
   async function saveImage(
     image: CameraCapturedPicture,
@@ -23,9 +25,8 @@ const useSubmitPhoto = (objectiveId: string) => {
   ) {
     try {
       setLoading(true);
-      console.log("save image");
       let base64Img = `data:image/jpg;base64,${image.base64}`;
-      let apiUrl = "https://api.cloudinary.com/v1_1/dadt6ioi4/image/upload";
+      let apiUrl = "https:api.cloudinary.com/v1_1/dadt6ioi4/image/upload";
       let data = {
         file: base64Img,
         upload_preset: "azigrdxg",
@@ -42,24 +43,30 @@ const useSubmitPhoto = (objectiveId: string) => {
 
       const imageToSave = {
         url: file.secure_url,
-        createdAt: new Date().toISOString(),
+        createdAt: dayjs().toISOString(),
       };
-
-      const batch = writeBatch(db);
 
       const filesRef = doc(
         collection(db, `users/${session?.uid}/objectives/${objectiveId}/files`)
       );
 
-      const emptyDays = actualObjective?.lastPhotoDate
-        ? dayjs().diff(dayjs(actualObjective?.lastPhotoDate), "day") - 1
-        : 0;
+      const emptyDays = actualObjective.lastPhotoDate
+        ? dayjs().diff(dayjs(actualObjective.lastPhotoDate), "day") - 1
+        : dayjs().diff(dayjs(formatDate(actualObjective.startingDate)), "day");
+
+      const batch = writeBatch(db);
+
+      const emptyDate =
+        actualObjective.lastPhotoDate ||
+        formatDate(actualObjective.startingDate);
 
       for (let i = 0; i < emptyDays; i++) {
         const emptyFile = {
           empty: true,
+          createdAt: dayjs(emptyDate).add(i, "day").toISOString(),
         };
 
+        batch.set(filesRef, imageToSave);
         batch.set(
           doc(
             collection(
@@ -71,7 +78,6 @@ const useSubmitPhoto = (objectiveId: string) => {
         );
       }
 
-      batch.set(filesRef, imageToSave);
       batch.update(doc(db, `users/${session?.uid}/objectives/${objectiveId}`), {
         lastPhotoDate: dayjs().format("DD-MM-YYYY"),
       });

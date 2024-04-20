@@ -1,6 +1,6 @@
 import { useSession } from "@/context/ctx";
 import { useObjectivesStore } from "@/context/store";
-import { deleteDoc, doc, writeBatch } from "firebase/firestore";
+import { doc, writeBatch } from "firebase/firestore";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
 import { db } from "root/config/firebase";

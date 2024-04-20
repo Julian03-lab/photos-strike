@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import { Camera } from "expo-camera";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
@@ -9,6 +10,7 @@ type CardProps = {
   unlocked?: boolean;
   imageUrl?: string;
   objectiveId: string;
+  empty?: boolean;
 };
 
 const MiniPhotoCard = ({
@@ -16,6 +18,7 @@ const MiniPhotoCard = ({
   unlocked = false,
   imageUrl,
   objectiveId,
+  empty,
 }: CardProps) => {
   const lockedRef: any = useRef(null);
   const unlockedRef: any = useRef(null);
@@ -101,8 +104,10 @@ const MiniPhotoCard = ({
       >
         Dia {index + 1}
       </Text>
-      {!imageUrl &&
-        (!unlocked ? (
+      {!imageUrl ? (
+        empty === true ? (
+          <Feather name="eye" size={24} />
+        ) : !unlocked ? (
           //   <Feather name="lock" size={24} />
           <LottieView
             autoPlay
@@ -126,7 +131,8 @@ const MiniPhotoCard = ({
             source={require("root/assets/animations/unlocked.json")}
           />
           //   <Feather name="unlock" size={24} color={"#51C878"} />
-        ))}
+        )
+      ) : null}
     </TouchableOpacity>
   );
 };

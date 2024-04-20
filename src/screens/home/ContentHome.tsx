@@ -35,7 +35,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
   );
   const files = useMemo(() => selectedObjective.files, [selectedObjective]);
 
-  const nextPhotoDays = dayjs().diff(
+  const nextPhotoDay = dayjs().diff(
     formatDate(selectedObjective.startingDate),
     "day"
   );
@@ -43,7 +43,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
   const cardsToShow = files.concat(
     Array.from({ length: selectedObjective.totalDays - files.length }).map(
       (_, index) => ({
-        unlocked: index + files.length === nextPhotoDays,
+        unlocked: index + files.length === nextPhotoDay,
       })
     )
   );
@@ -52,7 +52,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
     setSelectedValue(value);
   };
 
-  console.log(nextPhotoDays, cardsToShow);
+  console.log(files);
 
   return (
     <FlatList
@@ -85,6 +85,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
           imageUrl={selectedObjective.files[index]?.url}
           objectiveId={selectedObjective.id}
           unlocked={item.unlocked}
+          empty={item.empty}
         />
       )}
       numColumns={3}

@@ -94,7 +94,7 @@ const NewObjective = () => {
             setEndingDate(dayjs(date).add(1, "week").format("DD/MM/YYYY"));
           }}
           onCancel={() => setShowPicker(null)}
-          minimumDate={new Date()}
+          // minimumDate={new Date()}
         />
         <DateTimePickerModal
           date={dayjs(formatDate(endingDate)).toDate()}
