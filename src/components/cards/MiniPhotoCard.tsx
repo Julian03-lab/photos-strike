@@ -26,7 +26,7 @@ const MiniPhotoCard = ({
   // console.log(permission);
 
   const handlePress = async () => {
-    if (imageUrl) return;
+    if (imageUrl || empty) return;
     if (unlocked) {
       // if (permission?.canAskAgain === false && permission?.status !== "granted") {
       //   return Linking.openSettings();
