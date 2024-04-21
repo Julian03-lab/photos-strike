@@ -21,6 +21,8 @@ const Objectives = () => {
     [objectives]
   );
 
+  console.log("📁Archivo: index.tsx | Linea: 24 | objectives -> ", objectives);
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}

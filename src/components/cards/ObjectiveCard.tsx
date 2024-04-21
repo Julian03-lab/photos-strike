@@ -2,26 +2,37 @@ import useDeleteDoc from "@/hooks/useDeleteDoc";
 import useUpdateDoc from "@/hooks/useUpdateDoc";
 import { Objective } from "@/utils/types";
 import { Feather, FontAwesome } from "@expo/vector-icons";
-import { useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  FlatList,
   Pressable,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
 } from "react-native";
 import ContextMenu from "../buttons/ContextMenu";
-
-const dots = Array.from({ length: 12 }, (_, i) => i);
+import { getStreak } from "@/utils/calculateStrike";
+import { router } from "expo-router";
 
 const ObjectiveCard = ({ objective }: { objective: Objective }) => {
   const [handleDelete, loadingDelete] = useDeleteDoc();
   const [handleUpdate, loadingUpdate] = useUpdateDoc();
   const [menuVisible, setMenuVisible] = useState(false);
   const [faved, setFaved] = useState(objective.principal || false);
-  // const cardRef = useRef<View>(null);
-  // const [positionY, setPositionY] = useState(0);
+  const streak = useMemo(() => getStreak(objective.files), [objective.files]);
+  const filesToRender = useMemo(
+    () =>
+      objective.files.concat(
+        Array.from({
+          length: objective.totalDays - objective.files.length,
+        }).map(() => ({ empty: true }))
+      ),
+    [objective.files]
+  );
+
+  // console.log(filesToRender);
 
   const closeMenu = () => setMenuVisible(false);
   const openMenu = () => setMenuVisible(true);
@@ -29,6 +40,20 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
   const handleFavorite = () => {
     setFaved(!faved);
     handleUpdate(objective.id, { principal: !faved });
+  };
+
+  const handleEdit = () => {
+    setMenuVisible(false);
+    router.push({
+      pathname: "/objectives/edit-objective",
+      params: {
+        objectiveId: objective.id,
+        title: objective.title,
+        endingDate: objective.endingDate,
+        startingDate: objective.startingDate,
+        notificationTime: objective.notificationTime,
+      },
+    });
   };
 
   const options = [
@@ -40,6 +65,7 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
     {
       label: "Editar",
       icon: <Feather name={"edit"} size={24} />,
+      onPress: handleEdit,
     },
     {
       label: loadingDelete ? "Eliminando" : "Eliminar",
@@ -53,34 +79,51 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
     },
   ];
 
-  const Card = ({
-    openMenu,
-    cardRef,
-  }: {
-    openMenu: () => void;
-    cardRef?: React.RefObject<View>;
-  }) => {
+  const streakTexts = useMemo(() => {
+    if (streak === 0) {
+      return "👀 No has comenzado aun!";
+    }
+    if (streak === 1) {
+      return "💪 Llevas un dia, vamos por mas!";
+    }
+    return `🔥 Racha de ${streak} dias!`;
+  }, [streak]);
+
+  const Card = ({ openMenu }: { openMenu: () => void }) => {
     return (
-      <Pressable onLongPress={openMenu} ref={cardRef}>
+      <View>
+        <TouchableOpacity
+          style={{ position: "absolute", right: 16, top: 16, zIndex: 2 }}
+          onPress={openMenu}
+        >
+          <Feather name="sliders" size={24} />
+        </TouchableOpacity>
         <View style={styles.cardBody}>
-          {/* <Text style={styles.bodyTitle}>
-          Comenzado el: {objective.startingDate}
-        </Text> */}
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 12,
-              marginTop: 20,
+          <Text style={styles.bodyTitle}>
+            Comenzado el: {objective.startingDate}
+          </Text>
+          <FlatList
+            contentContainerStyle={{
+              paddingHorizontal: 20,
+              flexGrow: 1,
             }}
-          >
-            {dots.map((_, i) => (
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={filesToRender}
+            keyExtractor={(_item, index) => index.toString()}
+            renderItem={({ item }) => (
               <View
-                key={i}
-                style={[styles.dot, i < 4 && styles.completedDot]}
-              ></View>
-            ))}
-          </View>
-          <Text style={styles.bodySubtitle}>🔥 Racha de 4 dias</Text>
+                style={[
+                  styles.dot,
+                  item.empty && { backgroundColor: "rgba(0, 0, 0, 0.2)" },
+                  !item.empty && styles.completedDot,
+                ]}
+              />
+            )}
+            ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
+          />
+
+          <Text style={styles.bodySubtitle}>{streakTexts}</Text>
         </View>
         <View style={styles.cardFooter}>
           <Text style={styles.footerTitle}>{objective.title}</Text>
@@ -88,7 +131,7 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
             {objective.files.length}/{objective.totalDays} dias
           </Text>
         </View>
-      </Pressable>
+      </View>
     );
   };
   return (
@@ -96,7 +139,6 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
       options={options}
       menuVisible={menuVisible}
       closeMenu={closeMenu}
-      // underMenu={<Card openMenu={openMenu} />}
       disabled={loadingDelete || loadingUpdate}
     >
       <Card openMenu={openMenu} />
@@ -109,8 +151,8 @@ export default ObjectiveCard;
 const styles = StyleSheet.create({
   cardBody: {
     gap: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    // paddingHorizontal: 20,
+    paddingVertical: 20,
     backgroundColor: "#CAE7CB",
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
@@ -127,12 +169,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bodyTitle: {
-    fontSize: 20,
-    fontFamily: "Poppins_300Light",
+    fontSize: 16,
+    fontFamily: "Poppins_400Regular",
+    paddingHorizontal: 20,
   },
   bodySubtitle: {
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "Poppins_500Medium",
+    paddingHorizontal: 20,
   },
   footerTitle: {
     fontSize: 18,
@@ -148,6 +192,7 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 100,
     backgroundColor: "#fff",
+    // marginHorizontal: 6,
   },
   completedDot: {
     backgroundColor: "#51C878",

@@ -1,5 +1,6 @@
 import CustomPicker from "@/components/buttons/CustomPicker";
 import MiniPhotoCard from "@/components/cards/MiniPhotoCard";
+import useFetchObjectives from "@/hooks/useFetchObjectives";
 import formatDate from "@/utils/formatDate";
 import { Objective } from "@/utils/types";
 import { Feather } from "@expo/vector-icons";
@@ -18,6 +19,7 @@ import {
 type Option = { label: string; value: string };
 
 const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
+  // const { fetchObjectives } = useFetchObjectives();
   const options = useMemo<Option[]>(
     () =>
       objectives.map((item) => ({
@@ -52,10 +54,12 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
     setSelectedValue(value);
   };
 
-  console.log(files);
+  // console.log(files);
 
   return (
     <FlatList
+      // onRefresh={fetchObjectives}
+      // refreshing={false}
       ListHeaderComponent={
         <>
           <Text style={styles.title}>Objetivo del dia</Text>

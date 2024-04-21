@@ -45,7 +45,7 @@ const ContextMenu = ({
   const handleLayout = () => {
     if (!menuRef.current) return;
     menuRef.current.measure((_x, _y, _w, h) => {
-      if (positionY > h) {
+      if (positionY - 20 > h) {
         setMenuHeight(h);
         setMenuMargin({ marginBottom: MENU_BOTTOM_MARGIN, marginTop: 0 });
       } else {
@@ -84,7 +84,7 @@ const ContextMenu = ({
               style={{
                 position: "relative",
                 top:
-                  positionY < menuHeight
+                  positionY - 20 < menuHeight
                     ? positionY
                     : positionY - menuHeight - MENU_BOTTOM_MARGIN,
               }}
@@ -93,7 +93,7 @@ const ContextMenu = ({
                 style={{
                   width: "100%",
                   flexDirection:
-                    positionY < menuHeight ? "column-reverse" : "column",
+                    positionY - 20 < menuHeight ? "column-reverse" : "column",
                 }}
               >
                 <View

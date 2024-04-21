@@ -78,6 +78,35 @@ const ObjectivesLayout = () => {
             ),
           }}
         />
+        <Stack.Screen
+          name="edit-objective"
+          options={{
+            title: "Editar Objetivo",
+            headerLeft: () => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => router.push("/(main)/objectives/")}
+                >
+                  <Feather name="arrow-left" size={24} color="black" />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: "Poppins_500Medium",
+                  }}
+                >
+                  Editar Objetivo
+                </Text>
+              </View>
+            ),
+          }}
+        />
       </Stack>
       <Toast />
     </>

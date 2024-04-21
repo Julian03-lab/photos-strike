@@ -16,6 +16,7 @@ import ContextMenu from "../buttons/ContextMenu";
 import { Objective } from "@/utils/types";
 import useDeleteDoc from "@/hooks/useDeleteDoc";
 import useUpdateDoc from "@/hooks/useUpdateDoc";
+import { router } from "expo-router";
 
 const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
   const [handleDelete, loadingDelete] = useDeleteDoc();
@@ -54,6 +55,20 @@ const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
     </Pressable>
   );
 
+  const handleEdit = () => {
+    setMenuVisible(false);
+    router.push({
+      pathname: "/objectives/edit-objective",
+      params: {
+        objectiveId: objective.id,
+        title: objective.title,
+        endingDate: objective.endingDate,
+        startingDate: objective.startingDate,
+        notificationTime: objective.notificationTime,
+      },
+    });
+  };
+
   const options = [
     {
       label: faved ? "Destacado" : "Destacar",
@@ -63,6 +78,7 @@ const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
     {
       label: "Editar",
       icon: <Feather name={"edit"} size={24} />,
+      onPress: handleEdit,
     },
     {
       label: loadingDelete ? "Eliminando" : "Eliminar",

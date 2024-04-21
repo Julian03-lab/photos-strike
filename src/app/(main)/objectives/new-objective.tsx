@@ -8,7 +8,7 @@ import LabelButton from "@/components/buttons/LabelButton";
 import dayjs from "dayjs";
 import useAddObjective from "@/hooks/useAddObjective";
 import { router } from "expo-router";
-import formatDate from "@/utils/formatDate";
+var customParseFormat = require("dayjs/plugin/customParseFormat");
 
 const NewObjective = () => {
   const [objective, setObjective] = useState<string>("");
@@ -54,6 +54,7 @@ const NewObjective = () => {
   //     label: customFrecuency ? `${customFrecuency} dias` : "Custom",
   //   },
   // ];
+  dayjs.extend(customParseFormat);
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.container}>
@@ -94,10 +95,10 @@ const NewObjective = () => {
             setEndingDate(dayjs(date).add(1, "week").format("DD/MM/YYYY"));
           }}
           onCancel={() => setShowPicker(null)}
-          // minimumDate={new Date()}
+          minimumDate={new Date()}
         />
         <DateTimePickerModal
-          date={dayjs(formatDate(endingDate)).toDate()}
+          date={dayjs(endingDate, "DD-MM-YYYY").toDate()}
           display="default"
           isVisible={showPicker === "finishdate"}
           mode="date"
@@ -106,7 +107,9 @@ const NewObjective = () => {
             setEndingDate(dayjs(date).format("DD/MM/YYYY"));
           }}
           onCancel={() => setShowPicker(null)}
-          minimumDate={dayjs(formatDate(startingDate)).add(1, "week").toDate()}
+          minimumDate={dayjs(startingDate, "DD-MM-YYYY")
+            .add(1, "week")
+            .toDate()}
         />
         <DateTimePickerModal
           date={new Date()}

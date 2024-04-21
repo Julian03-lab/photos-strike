@@ -9,6 +9,7 @@ import { addDoc, collection, doc, writeBatch } from "firebase/firestore";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
 import { db } from "root/config/firebase";
+var customParseFormat = require("dayjs/plugin/customParseFormat");
 
 const useSubmitPhoto = (objectiveId: string) => {
   const { session } = useSession();
@@ -50,9 +51,15 @@ const useSubmitPhoto = (objectiveId: string) => {
         collection(db, `users/${session?.uid}/objectives/${objectiveId}/files`)
       );
 
+      dayjs.extend(customParseFormat);
+      const today = dayjs();
+
       const emptyDays = actualObjective.lastPhotoDate
-        ? dayjs().diff(dayjs(actualObjective.lastPhotoDate), "day") - 1
-        : dayjs().diff(dayjs(formatDate(actualObjective.startingDate)), "day");
+        ? today.diff(
+            dayjs(actualObjective.lastPhotoDate, "DD-MM-YYYY"),
+            "day"
+          ) - 1
+        : today.diff(dayjs(formatDate(actualObjective.startingDate)), "day");
 
       const batch = writeBatch(db);
 
@@ -66,7 +73,6 @@ const useSubmitPhoto = (objectiveId: string) => {
           createdAt: dayjs(emptyDate).add(i, "day").toISOString(),
         };
 
-        batch.set(filesRef, imageToSave);
         batch.set(
           doc(
             collection(
@@ -78,6 +84,7 @@ const useSubmitPhoto = (objectiveId: string) => {
         );
       }
 
+      batch.set(filesRef, imageToSave);
       batch.update(doc(db, `users/${session?.uid}/objectives/${objectiveId}`), {
         lastPhotoDate: dayjs().format("DD-MM-YYYY"),
       });

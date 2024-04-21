@@ -16,4 +16,7 @@ Una app para android realizada con React Native y Expo, permite establecer un ob
 - [ ] Visualizar una imagen
 - [ ] Visualizar el progreso en un calendario
 - [ ] Permitir ver el resultado final
-- [ ] Editar un objetivo
+- [X] Editar un objetivo
+- [ ] Implementar suscripcion
+- [ ] Dividir funciones premium y gratuitas
+- [ ] Modo oscuro/claro
