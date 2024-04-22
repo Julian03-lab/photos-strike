@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: "center",
     width: "100%",
-    gap: 8,
+    gap: 20,
   },
   skip: {
     color: "#51C878",

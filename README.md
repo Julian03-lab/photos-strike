@@ -20,6 +20,6 @@ Una app para android realizada con React Native y Expo, permite establecer un ob
 - [ ] Implementar suscripcion
 - [ ] Dividir funciones premium y gratuitas
 - [ ] Modo oscuro/claro
-- [ ] Modificar pantalla login
-- [ ] Mejorar pantalla de camara
-- [ ] Crear logo
+- [X] Modificar pantalla login
+- [X] Mejorar pantalla de camara
+- [/] Crear logo

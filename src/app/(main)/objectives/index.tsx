@@ -73,7 +73,7 @@ export default Objectives;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    padding: 20,
     backgroundColor: "#fff",
     gap: 16,
   },

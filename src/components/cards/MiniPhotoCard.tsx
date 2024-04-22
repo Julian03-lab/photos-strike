@@ -53,8 +53,9 @@ const MiniPhotoCard = ({
       activeOpacity={0.6}
       onPress={handlePress}
       style={{
-        width: 100,
-        height: 100,
+        flex: 1,
+        aspectRatio: 1,
+        maxWidth: 150,
         borderRadius: 8,
         alignItems: "center",
         justifyContent: "center",
@@ -68,8 +69,8 @@ const MiniPhotoCard = ({
     >
       <View
         style={{
-          width: 100,
-          height: 100,
+          width: "100%",
+          aspectRatio: 1,
           position: "absolute",
           top: 0,
           left: 0,
@@ -81,8 +82,8 @@ const MiniPhotoCard = ({
         <Image
           src={imageUrl}
           style={{
-            width: 100,
-            height: 100,
+            width: "100%",
+            aspectRatio: 1,
             position: "absolute",
             top: 0,
             left: 0,

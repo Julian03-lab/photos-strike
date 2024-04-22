@@ -7,7 +7,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
@@ -15,14 +14,25 @@ import {
   ActivityIndicator,
   BackHandler,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import useSubmitPhoto from "@/hooks/useSubmitPhoto";
 import LottieView from "lottie-react-native";
+import { Circle, Path, Svg, SvgProps } from "react-native-svg";
 
 const CAMERA_ICON_SIZE = 64;
-const OTHER_ICON_SIZE = 28;
+const OTHER_ICON_SIZE = 24;
+
+const Shutter = (props: SvgProps) => (
+  <Svg width={73} height={72} viewBox="0 0 73 72" fill="none" {...props}>
+    <Circle cx={36.4987} cy={35.9995} r={27.6667} fill="white" />
+    <Path
+      d="M72.5 36C72.5 55.8823 56.3823 72 36.5 72C16.6177 72 0.5 55.8823 0.5 36C0.5 16.1177 16.6177 0 36.5 0C56.3823 0 72.5 16.1177 72.5 36ZM4.98105 36C4.98105 53.4074 19.0926 67.519 36.5 67.519C53.9074 67.519 68.019 53.4074 68.019 36C68.019 18.5926 53.9074 4.48105 36.5 4.48105C19.0926 4.48105 4.98105 18.5926 4.98105 36Z"
+      fill="white"
+    />
+  </Svg>
+);
 
 const PhotoPreview = ({
   image,
@@ -77,19 +87,21 @@ const PhotoPreview = ({
         resizeMode="cover"
       >
         <View style={styles.topBar}>
-          <TouchableOpacity onPress={onClose} activeOpacity={0.8}>
-            <MaterialCommunityIcons
-              name="close"
-              size={OTHER_ICON_SIZE}
-              color="white"
-            />
+          <TouchableOpacity onPress={onClose} activeOpacity={0.5}>
+            <Feather name="x" size={44} color="rgba(255,255,255,0.7)" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleSend} activeOpacity={0.8}>
-            <MaterialCommunityIcons
-              name="send-check"
-              size={OTHER_ICON_SIZE}
-              color="white"
-            />
+          <TouchableOpacity
+            onPress={handleSend}
+            activeOpacity={0.5}
+            style={{
+              backgroundColor: "rgba(5,4,2,0.7)",
+              padding: 10,
+              borderRadius: 50,
+              borderWidth: 3,
+              borderColor: "rgba(255,255,255,0.7)",
+            }}
+          >
+            <Feather name="send" size={24} color="rgba(255,255,255,0.7)" />
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -169,49 +181,71 @@ const CameraComponent = ({ objectiveId }: { objectiveId: string }) => {
             flashMode={flash ? FlashMode.torch : FlashMode.off}
           />
           <View style={styles.topBar}>
-            <TouchableOpacity onPress={goBack} activeOpacity={0.8}>
-              <MaterialCommunityIcons
-                name="arrow-left"
-                size={OTHER_ICON_SIZE}
-                color="white"
-              />
+            <TouchableOpacity onPress={goBack} activeOpacity={0.5}>
+              <Feather name="x" size={44} color="rgba(255,255,255,0.7)" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={toggleFlash} activeOpacity={0.8}>
+            <TouchableOpacity
+              onPress={toggleFlash}
+              activeOpacity={0.5}
+              style={{
+                backgroundColor: "rgba(5,4,2,0.7)",
+                padding: 10,
+                borderRadius: 50,
+                borderWidth: 3,
+                borderColor: "rgba(255,255,255,0.7)",
+              }}
+            >
               {flash ? (
-                <MaterialCommunityIcons
-                  name="flashlight-off"
+                <Feather
+                  name="zap-off"
                   size={OTHER_ICON_SIZE}
-                  color="white"
+                  color="rgba(255,255,255,0.7)"
                 />
               ) : (
-                <MaterialCommunityIcons
-                  name="flashlight"
+                <Feather
+                  name="zap"
                   size={OTHER_ICON_SIZE}
-                  color="white"
+                  color="rgba(255,255,255,0.7)"
                 />
               )}
             </TouchableOpacity>
           </View>
           <View style={styles.bottomBar}>
-            <TouchableOpacity onPress={pickImage} activeOpacity={0.8}>
-              <MaterialCommunityIcons
-                name="view-gallery"
-                size={OTHER_ICON_SIZE}
-                color="grey"
+            <TouchableOpacity
+              onPress={pickImage}
+              activeOpacity={0.5}
+              style={{
+                backgroundColor: "rgba(5,4,2,0.7)",
+                padding: 10,
+                borderRadius: 50,
+                borderWidth: 3,
+                borderColor: "rgba(255,255,255,0.7)",
+              }}
+            >
+              <Feather
+                name="aperture"
+                size={30}
+                color="rgba(255,255,255,0.7)"
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={takePicture} activeOpacity={0.8}>
-              <MaterialCommunityIcons
-                name="record-circle-outline"
-                size={CAMERA_ICON_SIZE}
-                color="red"
-              />
+            <TouchableOpacity onPress={takePicture} activeOpacity={0.5}>
+              <Shutter />
             </TouchableOpacity>
-            <TouchableOpacity onPress={toggleCameraType} activeOpacity={0.8}>
+            <TouchableOpacity
+              onPress={toggleCameraType}
+              activeOpacity={0.5}
+              style={{
+                backgroundColor: "rgba(5,4,2,0.7)",
+                padding: 10,
+                borderRadius: 50,
+                borderWidth: 3,
+                borderColor: "rgba(255,255,255,0.7)",
+              }}
+            >
               <MaterialCommunityIcons
                 name="camera-flip"
-                size={OTHER_ICON_SIZE}
-                color="grey"
+                size={30}
+                color="rgba(255,255,255,0.7)"
               />
             </TouchableOpacity>
           </View>
@@ -250,19 +284,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    paddingVertical: 16,
-    paddingHorizontal: 30,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     alignItems: "center",
-    backgroundColor: "rgb(0,0,0)",
+    backgroundColor: "rgba(0,0,0, 0.7)",
     zIndex: 3,
   },
   bottomBar: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    paddingVertical: 18,
-    paddingHorizontal: 30,
+    paddingVertical: 34,
+    paddingHorizontal: 16,
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    // backgroundColor: "rgba(0,0,0,0.5)",
   },
 });

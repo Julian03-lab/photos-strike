@@ -42,13 +42,24 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
     "day"
   );
 
-  const cardsToShow = files.concat(
-    Array.from({ length: selectedObjective.totalDays - files.length }).map(
-      (_, index) => ({
-        unlocked: index + files.length === nextPhotoDay,
-      })
+  const cardsToShow = files
+    .concat(
+      Array.from({ length: selectedObjective.totalDays - files.length }).map(
+        (_, index) => ({
+          unlocked: index + files.length === nextPhotoDay,
+        })
+      )
     )
-  );
+    .concat(
+      Array.from({
+        length:
+          selectedObjective.totalDays % 3 === 0
+            ? 0
+            : 3 - (selectedObjective.totalDays % 3),
+      }).map((_, index) => ({
+        isPlaceholder: true,
+      }))
+    );
 
   const handleValueChange = (value: Option) => {
     setSelectedValue(value);
@@ -58,6 +69,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
 
   return (
     <FlatList
+      contentContainerStyle={{ paddingVertical: 20 }}
       // onRefresh={fetchObjectives}
       // refreshing={false}
       ListHeaderComponent={
@@ -83,21 +95,24 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
       }}
       data={cardsToShow}
       keyExtractor={(_, index) => index.toString()}
-      renderItem={({ item, index }) => (
-        <MiniPhotoCard
-          index={index}
-          imageUrl={selectedObjective.files[index]?.url}
-          objectiveId={selectedObjective.id}
-          unlocked={item.unlocked}
-          empty={item.empty}
-        />
-      )}
+      renderItem={({ item, index }) =>
+        item.isPlaceholder ? (
+          <View style={{ flex: 1, aspectRatio: 1 }} />
+        ) : (
+          <MiniPhotoCard
+            index={index}
+            imageUrl={selectedObjective.files[index]?.url}
+            objectiveId={selectedObjective.id}
+            unlocked={item.unlocked}
+            empty={item.empty}
+          />
+        )
+      }
       numColumns={3}
-      columnWrapperStyle={{ justifyContent: "center", gap: 10 }}
+      columnWrapperStyle={{ justifyContent: "flex-start", gap: 10 }}
       ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
       style={{
         paddingHorizontal: 20,
-        paddingBottom: 20,
       }}
     />
   );
