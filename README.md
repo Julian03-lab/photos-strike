@@ -8,7 +8,7 @@ Una app para android realizada con React Native y Expo, permite establecer un ob
 - [X] Crear un objetivo
 - [X] Tomar una foto diaria
 - [X] Visualizar el progreso hacia el objetivo
-- [X] Establecer un recordatorio para tomar la foto diaria
+- [ ] Establecer un recordatorio para tomar la foto diaria
 
 ## TODO:
 - [ ] Implementar notificaciones push
@@ -20,3 +20,6 @@ Una app para android realizada con React Native y Expo, permite establecer un ob
 - [ ] Implementar suscripcion
 - [ ] Dividir funciones premium y gratuitas
 - [ ] Modo oscuro/claro
+- [ ] Modificar pantalla login
+- [ ] Mejorar pantalla de camara
+- [ ] Crear logo
