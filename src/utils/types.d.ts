@@ -11,6 +11,7 @@ export type Objective = {
   title: string;
   totalDays: number;
   files: any[];
+  viewed: boolean;
 };
 
 export type addObjectivesProps = {

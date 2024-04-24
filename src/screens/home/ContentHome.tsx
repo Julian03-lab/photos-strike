@@ -1,11 +1,12 @@
 import CustomPicker from "@/components/buttons/CustomPicker";
 import MiniPhotoCard from "@/components/cards/MiniPhotoCard";
+import CompletedObjective from "@/components/popups/CompletedObjective";
 import useFetchObjectives from "@/hooks/useFetchObjectives";
 import formatDate from "@/utils/formatDate";
 import { Objective } from "@/utils/types";
 import { Feather } from "@expo/vector-icons";
 import dayjs from "dayjs";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FlatList,
   Image,
@@ -29,6 +30,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
     [objectives]
   );
   const [selectedValue, setSelectedValue] = useState(options[0]);
+  const [visible, setVisible] = useState(false);
   const selectedObjective = useMemo(
     () =>
       objectives.find((item) => item.id === selectedValue.value) ||
@@ -65,56 +67,61 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
     setSelectedValue(value);
   };
 
-  // console.log(files);
+  // console.log(visible);
 
   return (
-    <FlatList
-      contentContainerStyle={{ paddingVertical: 20 }}
-      // onRefresh={fetchObjectives}
-      // refreshing={false}
-      ListHeaderComponent={
-        <>
-          <Text style={styles.title}>Objetivo del dia</Text>
-          <View style={styles.bar}>
-            <CustomPicker
-              options={options}
-              selectedValue={selectedValue}
-              onValueChange={handleValueChange}
+    <>
+      {selectedObjective.completed && !selectedObjective.viewed && (
+        <CompletedObjective objectiveId={selectedObjective.id} />
+      )}
+      <FlatList
+        contentContainerStyle={{ paddingVertical: 20 }}
+        // onRefresh={fetchObjectives}
+        // refreshing={false}
+        ListHeaderComponent={
+          <>
+            <Text style={styles.title}>Objetivo del dia</Text>
+            <View style={styles.bar}>
+              <CustomPicker
+                options={options}
+                selectedValue={selectedValue}
+                onValueChange={handleValueChange}
+              />
+              <Text style={styles.helperText}>
+                {files.length}/{selectedObjective.totalDays} dias
+              </Text>
+            </View>
+            {/* <Text style={styles.subtitle}>Faltan 12:21 para la foto del dia</Text> */}
+            <Text style={styles.subtitle}>Es momento de la foto 📷</Text>
+          </>
+        }
+        ListHeaderComponentStyle={{
+          gap: 24,
+          marginBottom: 24,
+        }}
+        data={cardsToShow}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({ item, index }) =>
+          item.isPlaceholder ? (
+            <View style={{ flex: 1, aspectRatio: 1 }} />
+          ) : (
+            <MiniPhotoCard
+              index={index}
+              imageUrl={selectedObjective.files[index]?.url}
+              objectiveId={selectedObjective.id}
+              unlocked={item.unlocked}
+              empty={item.empty}
             />
-            <Text style={styles.helperText}>
-              {files.length}/{selectedObjective.totalDays} dias
-            </Text>
-          </View>
-          {/* <Text style={styles.subtitle}>Faltan 12:21 para la foto del dia</Text> */}
-          <Text style={styles.subtitle}>Es momento de la foto 📷</Text>
-        </>
-      }
-      ListHeaderComponentStyle={{
-        gap: 24,
-        marginBottom: 24,
-      }}
-      data={cardsToShow}
-      keyExtractor={(_, index) => index.toString()}
-      renderItem={({ item, index }) =>
-        item.isPlaceholder ? (
-          <View style={{ flex: 1, aspectRatio: 1 }} />
-        ) : (
-          <MiniPhotoCard
-            index={index}
-            imageUrl={selectedObjective.files[index]?.url}
-            objectiveId={selectedObjective.id}
-            unlocked={item.unlocked}
-            empty={item.empty}
-          />
-        )
-      }
-      numColumns={3}
-      columnWrapperStyle={{ justifyContent: "flex-start", gap: 10 }}
-      ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-      style={{
-        paddingHorizontal: 20,
-      }}
-    />
+          )
+        }
+        numColumns={3}
+        columnWrapperStyle={{ justifyContent: "flex-start", gap: 10 }}
+        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+        style={{
+          paddingHorizontal: 20,
+        }}
+      />
+    </>
   );
 };
 
