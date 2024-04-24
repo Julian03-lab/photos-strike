@@ -62,11 +62,13 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
       icon: <FontAwesome name={faved ? "star" : "star-o"} size={24} />,
       onPress: handleFavorite,
     },
-    {
-      label: "Editar",
-      icon: <Feather name={"edit"} size={24} />,
-      onPress: handleEdit,
-    },
+    !objective.completed
+      ? {
+          label: "Editar",
+          icon: <Feather name={"edit"} size={24} />,
+          onPress: handleEdit,
+        }
+      : null,
     {
       label: loadingDelete ? "Eliminando" : "Eliminar",
       icon: loadingDelete ? (
@@ -80,6 +82,9 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
   ];
 
   const streakTexts = useMemo(() => {
+    if (objective.completed) {
+      return "🎉 Objetivo completado!";
+    }
     if (streak === 0) {
       return "👀 No has comenzado aun!";
     }

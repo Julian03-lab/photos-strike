@@ -1,10 +1,8 @@
 import { useSession } from "@/context/ctx";
 import { useObjectivesStore } from "@/context/store";
-import formatDate from "@/utils/formatDate";
 import { Objective } from "@/utils/types";
 import dayjs from "dayjs";
 import { CameraCapturedPicture } from "expo-camera";
-import { router } from "expo-router";
 import { addDoc, collection, doc, writeBatch } from "firebase/firestore";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
@@ -59,18 +57,20 @@ const useSubmitPhoto = (objectiveId: string) => {
             dayjs(actualObjective.lastPhotoDate, "DD-MM-YYYY"),
             "day"
           ) - 1
-        : today.diff(dayjs(formatDate(actualObjective.startingDate)), "day");
+        : today.diff(dayjs(actualObjective.startingDate, "DD-MM-YYYY"), "day");
 
       const batch = writeBatch(db);
 
       const emptyDate =
-        actualObjective.lastPhotoDate ||
-        formatDate(actualObjective.startingDate);
+        dayjs(actualObjective.lastPhotoDate, "DD-MM-YYYY")
+          .add(1, "day")
+          .format("DD-MM-YYYY") ||
+        dayjs(actualObjective.startingDate, "DD-MM-YYYY");
 
       for (let i = 0; i < emptyDays; i++) {
         const emptyFile = {
           empty: true,
-          createdAt: dayjs(emptyDate).add(i, "day").toISOString(),
+          createdAt: dayjs(emptyDate, "DD-MM-YYYY").add(i, "day").toISOString(),
         };
 
         batch.set(
@@ -88,6 +88,18 @@ const useSubmitPhoto = (objectiveId: string) => {
       batch.update(doc(db, `users/${session?.uid}/objectives/${objectiveId}`), {
         lastPhotoDate: dayjs().format("DD-MM-YYYY"),
       });
+
+      if (
+        actualObjective.files.length + 1 + emptyDays >=
+        actualObjective.totalDays
+      ) {
+        batch.update(
+          doc(db, `users/${session?.uid}/objectives/${objectiveId}`),
+          {
+            completed: true,
+          }
+        );
+      }
 
       await batch.commit();
 

@@ -18,7 +18,7 @@ type Option = {
 };
 
 type ContextMenuProps = {
-  options: Option[];
+  options: Array<Option | null>;
   menuVisible: boolean;
   closeMenu: () => void;
   children: JSX.Element;
@@ -110,28 +110,31 @@ const ContextMenu = ({
                     menuMargin,
                   ]}
                 >
-                  {options.map((option, index) => (
-                    <Fragment key={index}>
-                      <TouchableOpacity
-                        style={styles.optionButton}
-                        activeOpacity={0.5}
-                        onPress={option.onPress}
-                        disabled={disabled}
-                      >
-                        <Text
-                          style={[
-                            styles.option,
-                            option.textColor
-                              ? { color: option.textColor }
-                              : { color: "#000" },
-                          ]}
-                        >
-                          {option.label}
-                        </Text>
-                        {option.icon}
-                      </TouchableOpacity>
-                    </Fragment>
-                  ))}
+                  {options.map(
+                    (option, index) =>
+                      option && (
+                        <Fragment key={index}>
+                          <TouchableOpacity
+                            style={styles.optionButton}
+                            activeOpacity={0.5}
+                            onPress={option.onPress}
+                            disabled={disabled}
+                          >
+                            <Text
+                              style={[
+                                styles.option,
+                                option.textColor
+                                  ? { color: option.textColor }
+                                  : { color: "#000" },
+                              ]}
+                            >
+                              {option.label}
+                            </Text>
+                            {option.icon}
+                          </TouchableOpacity>
+                        </Fragment>
+                      )
+                  )}
                 </View>
                 {children}
               </View>
