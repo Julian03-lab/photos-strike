@@ -97,12 +97,6 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
   const Card = ({ openMenu }: { openMenu: () => void }) => {
     return (
       <View>
-        <TouchableOpacity
-          style={{ position: "absolute", right: 16, top: 16, zIndex: 2 }}
-          onPress={openMenu}
-        >
-          <Feather name="sliders" size={24} />
-        </TouchableOpacity>
         <View style={styles.cardBody}>
           <Text style={styles.bodyTitle}>
             Comenzado el: {objective.startingDate}
@@ -136,6 +130,12 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
             {objective.files.length}/{objective.totalDays} dias
           </Text>
         </View>
+        <TouchableOpacity
+          style={{ position: "absolute", right: 16, top: 16, zIndex: 2 }}
+          onPress={openMenu}
+        >
+          <Feather name="sliders" size={24} />
+        </TouchableOpacity>
       </View>
     );
   };
@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#CAE7CB",
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
-    overflow: "hidden",
   },
   cardFooter: {
     paddingHorizontal: 20,

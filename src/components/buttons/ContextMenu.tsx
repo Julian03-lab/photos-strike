@@ -1,6 +1,5 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Dimensions,
   Modal,
   Pressable,
   StyleSheet,
@@ -9,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import Animated, { ZoomIn } from "react-native-reanimated";
 
 type Option = {
   label: string;
@@ -33,8 +33,7 @@ const ContextMenu = ({
   disabled,
 }: ContextMenuProps) => {
   const MENU_BOTTOM_MARGIN = 20;
-  const menuRef = useRef<View>(null);
-  const [menuHeight, setMenuHeight] = useState(0);
+  const OPTION_HEIGHT = 54.33;
   const [menuMargin, setMenuMargin] = useState({
     marginBottom: MENU_BOTTOM_MARGIN,
     marginTop: 0,
@@ -42,24 +41,24 @@ const ContextMenu = ({
   const viewRef = useRef<View>(null);
   const [positionY, setPositionY] = useState(0);
 
-  const handleLayout = () => {
-    if (!menuRef.current) return;
-    menuRef.current.measure((_x, _y, _w, h) => {
-      if (positionY - 20 > h) {
-        setMenuHeight(h);
-        setMenuMargin({ marginBottom: MENU_BOTTOM_MARGIN, marginTop: 0 });
-      } else {
-        setMenuHeight(h);
-        setMenuMargin({ marginTop: MENU_BOTTOM_MARGIN, marginBottom: 0 });
-      }
-    });
-  };
+  const optionsLength = useMemo(
+    () => options.filter((option) => option !== null).length,
+    [options]
+  );
+  const menuHeight = useMemo(
+    () => optionsLength * OPTION_HEIGHT,
+    [optionsLength]
+  );
 
   const handleViewLayout = () => {
     if (!viewRef.current) return;
     viewRef.current.measureInWindow((_x, y, _w, _h) => {
-      // console.log("pos y: ", y);
       setPositionY(y);
+      if (y - 20 > menuHeight) {
+        setMenuMargin({ marginBottom: MENU_BOTTOM_MARGIN, marginTop: 0 });
+      } else {
+        setMenuMargin({ marginTop: MENU_BOTTOM_MARGIN, marginBottom: 0 });
+      }
     });
   };
 
@@ -96,9 +95,8 @@ const ContextMenu = ({
                     positionY - 20 < menuHeight ? "column-reverse" : "column",
                 }}
               >
-                <View
-                  ref={menuRef}
-                  onLayout={handleLayout}
+                <Animated.View
+                  entering={ZoomIn}
                   style={[
                     {
                       position: "relative",
@@ -113,29 +111,27 @@ const ContextMenu = ({
                   {options.map(
                     (option, index) =>
                       option && (
-                        <Fragment key={index}>
-                          <TouchableOpacity
-                            style={styles.optionButton}
-                            activeOpacity={0.5}
-                            onPress={option.onPress}
-                            disabled={disabled}
+                        <TouchableOpacity
+                          style={styles.optionButton}
+                          activeOpacity={0.5}
+                          onPress={option.onPress}
+                          disabled={disabled}
+                          key={index}
+                        >
+                          <Text
+                            style={[
+                              styles.option,
+                              { color: option.textColor || "#000" },
+                            ]}
                           >
-                            <Text
-                              style={[
-                                styles.option,
-                                option.textColor
-                                  ? { color: option.textColor }
-                                  : { color: "#000" },
-                              ]}
-                            >
-                              {option.label}
-                            </Text>
-                            {option.icon}
-                          </TouchableOpacity>
-                        </Fragment>
+                            {option.label}
+                          </Text>
+                          {option.icon}
+                        </TouchableOpacity>
                       )
                   )}
-                </View>
+                </Animated.View>
+                {/* <Animated.View entering={StretchInX}>{children}</Animated.View> */}
                 {children}
               </View>
             </Pressable>
