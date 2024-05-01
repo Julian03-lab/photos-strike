@@ -16,9 +16,6 @@ const useDeleteDoc = (): [(documentId: string) => Promise<void>, boolean] => {
       setLoading(true);
       const batch = writeBatch(db);
       batch.delete(doc(db, `users/${session?.uid}/objectives/${documentId}`));
-      batch.delete(
-        doc(db, `users/${session?.uid}/objectives/${documentId}/files`)
-      );
       await batch.commit();
       setTimeout(() => {
         removeObjective(documentId);

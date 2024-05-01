@@ -11,7 +11,7 @@ Una app para android realizada con React Native y Expo, permite establecer un ob
 - [ ] Establecer un recordatorio para tomar la foto diaria
 
 ## TODO:
-- [ ] Visualizar una imagen
+- [X] Visualizar una imagen
 - [ ] Permitir ver el resultado final
 - [ ] Pantalla de perfil
 - [ ] Pantalla de ajustes

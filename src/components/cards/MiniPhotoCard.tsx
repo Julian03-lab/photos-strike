@@ -2,8 +2,9 @@ import { Feather } from "@expo/vector-icons";
 import { Camera } from "expo-camera";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import BigPhotoCard from "./BigPhotoCard";
 
 type CardProps = {
   index: number;
@@ -23,15 +24,16 @@ const MiniPhotoCard = ({
   const lockedRef: any = useRef(null);
   const unlockedRef: any = useRef(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [openPhoto, setOpenPhoto] = useState(false);
   // console.log(permission);
 
   const handlePress = async () => {
-    if (imageUrl || empty) return;
+    if (empty) return;
+    if (imageUrl) {
+      setOpenPhoto(!openPhoto);
+      return;
+    }
     if (unlocked) {
-      // if (permission?.canAskAgain === false && permission?.status !== "granted") {
-      //   return Linking.openSettings();
-      // }
-
       if (permission?.status === "granted") {
         router.push({ pathname: "/home/take-photo", params: { objectiveId } });
       } else {
@@ -49,92 +51,99 @@ const MiniPhotoCard = ({
   };
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.6}
-      onPress={handlePress}
-      style={{
-        flex: 1,
-        aspectRatio: 1,
-        maxWidth: 150,
-        borderRadius: 8,
-        alignItems: "center",
-        justifyContent: "center",
-        // gap: 4,
-        borderWidth: 1.5,
-        borderColor: !unlocked ? "rgba(0,0,0,1)" : "#51C878",
-        overflow: "hidden",
-        position: "relative",
-        zIndex: 0,
-      }}
-    >
-      <View
-        style={{
-          width: "100%",
-          aspectRatio: 1,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 0,
-          backgroundColor: imageUrl ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.8)",
-        }}
+    <>
+      <BigPhotoCard
+        src={imageUrl}
+        photoOpened={openPhoto}
+        closePhoto={() => setOpenPhoto(false)}
       />
-      {imageUrl && (
-        <Image
-          src={imageUrl}
+      <TouchableOpacity
+        activeOpacity={0.6}
+        onPress={handlePress}
+        style={{
+          flex: 1,
+          aspectRatio: 1,
+          maxWidth: 150,
+          borderRadius: 8,
+          alignItems: "center",
+          justifyContent: "center",
+          // gap: 4,
+          borderWidth: 1.5,
+          borderColor: !unlocked ? "rgba(0,0,0,1)" : "#51C878",
+          overflow: "hidden",
+          position: "relative",
+          zIndex: 0,
+        }}
+      >
+        <View
           style={{
             width: "100%",
             aspectRatio: 1,
             position: "absolute",
             top: 0,
             left: 0,
-            zIndex: -1,
+            zIndex: 0,
+            backgroundColor: imageUrl ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.8)",
           }}
-          blurRadius={35}
-          resizeMode="cover"
         />
-      )}
-      <Text
-        style={{
-          position: "relative",
-          top: 8,
-          zIndex: 1,
-          fontSize: 16,
-          fontFamily: "Poppins_600SemiBold",
-          color: imageUrl ? "#fff" : "#fff",
-        }}
-      >
-        Dia {index + 1}
-      </Text>
-      {!imageUrl ? (
-        empty === true ? (
-          <Feather name="eye" size={24} />
-        ) : !unlocked ? (
-          //   <Feather name="lock" size={24} />
-          <LottieView
-            autoPlay
-            loop={false}
-            ref={lockedRef}
+        {imageUrl && (
+          <Image
+            src={imageUrl}
             style={{
-              width: 56,
-              height: 56,
+              width: "100%",
+              aspectRatio: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              zIndex: -1,
             }}
-            source={require("root/assets/animations/locked.json")}
+            blurRadius={35}
+            resizeMode="cover"
           />
-        ) : (
-          <LottieView
-            autoPlay
-            duration={5000}
-            ref={unlockedRef}
-            style={{
-              width: 56,
-              height: 56,
-            }}
-            source={require("root/assets/animations/unlocked.json")}
-          />
-          //   <Feather name="unlock" size={24} color={"#51C878"} />
-        )
-      ) : null}
-    </TouchableOpacity>
+        )}
+        <Text
+          style={{
+            position: "relative",
+            top: 8,
+            zIndex: 1,
+            fontSize: 16,
+            fontFamily: "Poppins_600SemiBold",
+            color: imageUrl ? "#fff" : "#fff",
+          }}
+        >
+          Dia {index + 1}
+        </Text>
+        {!imageUrl ? (
+          empty === true ? (
+            <Feather name="eye" size={24} />
+          ) : !unlocked ? (
+            //   <Feather name="lock" size={24} />
+            <LottieView
+              autoPlay
+              loop={false}
+              ref={lockedRef}
+              style={{
+                width: 56,
+                height: 56,
+              }}
+              source={require("root/assets/animations/locked.json")}
+            />
+          ) : (
+            <LottieView
+              autoPlay
+              duration={5000}
+              ref={unlockedRef}
+              style={{
+                width: 56,
+                height: 56,
+              }}
+              source={require("root/assets/animations/unlocked.json")}
+            />
+            //   <Feather name="unlock" size={24} color={"#51C878"} />
+          )
+        ) : null}
+      </TouchableOpacity>
+    </>
   );
 };
 

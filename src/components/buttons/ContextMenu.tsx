@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import Animated, { ZoomIn } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
 type Option = {
   label: string;
@@ -41,13 +41,9 @@ const ContextMenu = ({
   const viewRef = useRef<View>(null);
   const [positionY, setPositionY] = useState(0);
 
-  const optionsLength = useMemo(
-    () => options.filter((option) => option !== null).length,
-    [options]
-  );
   const menuHeight = useMemo(
-    () => optionsLength * OPTION_HEIGHT,
-    [optionsLength]
+    () => options.filter((option) => option !== null).length * OPTION_HEIGHT,
+    [options]
   );
 
   const handleViewLayout = () => {
@@ -96,7 +92,7 @@ const ContextMenu = ({
                 }}
               >
                 <Animated.View
-                  entering={ZoomIn}
+                  // entering={ZoomIn}
                   style={[
                     {
                       position: "relative",
