@@ -2,7 +2,7 @@ import {
   Camera,
   CameraCapturedPicture,
   CameraType,
-  FlashMode,
+  CameraView,
 } from "expo-camera";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -13,6 +13,7 @@ import {
   StatusBar,
   ActivityIndicator,
   BackHandler,
+  Text,
 } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -110,16 +111,15 @@ const PhotoPreview = ({
 };
 
 const CameraComponent = ({ objectiveId }: { objectiveId: string }) => {
-  const [type, setType] = useState(CameraType.back);
+  const [type, setType] = useState<CameraType>("back");
   const [flash, setFlash] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
   const [image, setImage] = useState<CameraCapturedPicture | null>(null);
-  const cameraRef = useRef<Camera>(null);
+  const cameraRef = useRef<CameraView>(null);
+  const [loading, setLoading] = useState(false);
 
   function toggleCameraType() {
-    setType((current) =>
-      current === CameraType.back ? CameraType.front : CameraType.back
-    );
+    setType((current) => (current === "back" ? "front" : "back"));
   }
 
   function toggleFlash() {
@@ -127,16 +127,21 @@ const CameraComponent = ({ objectiveId }: { objectiveId: string }) => {
   }
 
   async function takePicture() {
+    // console.log(await cameraRef.current?.getAvailablePictureSizesAsync());
+
     if (cameraRef.current && cameraReady) {
+      setLoading(true);
       const photo = await cameraRef.current.takePictureAsync({
         quality: 0.7,
         base64: true,
       });
-      const source = photo.base64;
+
+      const source = photo?.base64;
       if (source) {
-        await cameraRef.current.pausePreview();
         setImage(photo);
+        setLoading(false);
       }
+      console.log(photo);
     }
   }
 
@@ -172,46 +177,55 @@ const CameraComponent = ({ objectiveId }: { objectiveId: string }) => {
         />
       ) : (
         <>
-          <Camera
+          <CameraView
             style={styles.camera}
-            type={type}
-            ratio="16:9"
+            facing={type}
             ref={cameraRef}
             onCameraReady={() => setCameraReady(true)}
-            flashMode={flash ? FlashMode.torch : FlashMode.off}
+            enableTorch={flash}
           />
           <View style={styles.topBar}>
-            <TouchableOpacity onPress={goBack} activeOpacity={0.5}>
+            <TouchableOpacity
+              onPress={goBack}
+              activeOpacity={0.5}
+              disabled={loading}
+            >
               <Feather name="x" size={44} color="rgba(255,255,255,0.7)" />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={toggleFlash}
-              activeOpacity={0.5}
-              style={{
-                backgroundColor: "rgba(5,4,2,0.7)",
-                padding: 10,
-                borderRadius: 50,
-                borderWidth: 3,
-                borderColor: "rgba(255,255,255,0.7)",
-              }}
-            >
-              {flash ? (
-                <Feather
-                  name="zap-off"
-                  size={OTHER_ICON_SIZE}
-                  color="rgba(255,255,255,0.7)"
-                />
-              ) : (
-                <Feather
-                  name="zap"
-                  size={OTHER_ICON_SIZE}
-                  color="rgba(255,255,255,0.7)"
-                />
-              )}
-            </TouchableOpacity>
+            {type === "back" ? (
+              <TouchableOpacity
+                disabled={loading}
+                onPress={toggleFlash}
+                activeOpacity={0.5}
+                style={{
+                  backgroundColor: "rgba(5,4,2,0.7)",
+                  padding: 8,
+                  borderRadius: 50,
+                  borderWidth: 2,
+                  borderColor: "rgba(255,255,255,0.7)",
+                }}
+              >
+                {flash ? (
+                  <Feather
+                    name="zap-off"
+                    size={OTHER_ICON_SIZE}
+                    color="rgba(255,255,255,0.7)"
+                  />
+                ) : (
+                  <Feather
+                    name="zap"
+                    size={OTHER_ICON_SIZE}
+                    color="rgba(255,255,255,0.7)"
+                  />
+                )}
+              </TouchableOpacity>
+            ) : (
+              <></>
+            )}
           </View>
           <View style={styles.bottomBar}>
             <TouchableOpacity
+              disabled={loading}
               onPress={pickImage}
               activeOpacity={0.5}
               style={{
@@ -228,10 +242,15 @@ const CameraComponent = ({ objectiveId }: { objectiveId: string }) => {
                 color="rgba(255,255,255,0.7)"
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={takePicture} activeOpacity={0.5}>
+            <TouchableOpacity
+              onPress={takePicture}
+              activeOpacity={0.5}
+              disabled={loading}
+            >
               <Shutter />
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={loading}
               onPress={toggleCameraType}
               activeOpacity={0.5}
               style={{
@@ -255,6 +274,7 @@ const CameraComponent = ({ objectiveId }: { objectiveId: string }) => {
     </View>
   );
 };
+
 export default CameraComponent;
 
 const styles = StyleSheet.create({
@@ -263,7 +283,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   camera: {
-    // aspectRatio: 1,
+    //aspectRatio: 1,
     width: "100%",
     height: "100%",
     position: "absolute",

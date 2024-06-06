@@ -1,5 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import { Camera } from "expo-camera";
+import { useCameraPermissions } from "expo-camera";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 import { useRef, useState } from "react";
@@ -23,7 +23,7 @@ const MiniPhotoCard = ({
 }: CardProps) => {
   const lockedRef: any = useRef(null);
   const unlockedRef: any = useRef(null);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [permission, requestPermission] = useCameraPermissions();
   const [openPhoto, setOpenPhoto] = useState(false);
   // console.log(permission);
 
@@ -33,7 +33,7 @@ const MiniPhotoCard = ({
       setOpenPhoto(!openPhoto);
       return;
     }
-    if (unlocked) {
+    if (true) {
       if (permission?.status === "granted") {
         router.push({ pathname: "/home/take-photo", params: { objectiveId } });
       } else {
