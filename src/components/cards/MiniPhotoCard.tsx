@@ -33,7 +33,7 @@ const MiniPhotoCard = ({
       setOpenPhoto(!openPhoto);
       return;
     }
-    if (true) {
+    if (unlocked) {
       if (permission?.status === "granted") {
         router.push({ pathname: "/home/take-photo", params: { objectiveId } });
       } else {

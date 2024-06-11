@@ -16,7 +16,7 @@ const CompletedObjective = ({ objectiveId }: { objectiveId: string }) => {
 
   const handleDismiss = () => {
     setModalVisible(!modalVisible);
-    updateDoc(objectiveId, { viewed: true });
+    updateDoc(objectiveId, { viewed: true, completed: true });
   };
 
   return (

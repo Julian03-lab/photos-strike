@@ -1,6 +1,7 @@
 import { Link } from "expo-router";
 import LottieView from "lottie-react-native";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+
 const TurnNotificationsScreen = () => {
   return (
     <View

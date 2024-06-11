@@ -1,23 +1,23 @@
 import CustomPicker from "@/components/buttons/CustomPicker";
 import MiniPhotoCard from "@/components/cards/MiniPhotoCard";
 import CompletedObjective from "@/components/popups/CompletedObjective";
-import useFetchObjectives from "@/hooks/useFetchObjectives";
 import formatDate from "@/utils/formatDate";
 import { Objective } from "@/utils/types";
-import { Feather } from "@expo/vector-icons";
 import dayjs from "dayjs";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   FlatList,
-  Image,
-  ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 
+var customParseFormat = require("dayjs/plugin/customParseFormat");
+
 type Option = { label: string; value: string };
+
+dayjs.extend(customParseFormat);
 
 const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
   // const { fetchObjectives } = useFetchObjectives();
@@ -37,6 +37,14 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
       objectives[0],
     [selectedValue, objectives]
   );
+
+  const showCompletationPopup = useMemo(
+    () =>
+      (selectedObjective.completed && !selectedObjective.viewed) ||
+      dayjs().isAfter(dayjs(selectedObjective.endingDate, "DD-MM-YYYY"), "D"),
+    [selectedObjective]
+  );
+
   const files = useMemo(() => selectedObjective.files, [selectedObjective]);
 
   const nextPhotoDay = dayjs().diff(
@@ -67,11 +75,9 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
     setSelectedValue(value);
   };
 
-  // console.log(visible);
-
   return (
     <>
-      {selectedObjective.completed && !selectedObjective.viewed && (
+      {showCompletationPopup && (
         <CompletedObjective objectiveId={selectedObjective.id} />
       )}
       <FlatList
