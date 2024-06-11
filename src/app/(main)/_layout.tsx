@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useSession } from "@/context/ctx";
 import { useEffect, useState } from "react";
+import { StatusBar } from "expo-status-bar";
 
 const CustomTabBar = ({
   state,
@@ -132,68 +133,71 @@ const MainLayout = () => {
   // console.log(segment);
 
   return (
-    <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />}
-      screenOptions={{
-        headerTitle: "",
-        headerStyle: {
-          shadowColor: "transparent",
-        },
-        headerRight: () => (
-          <TouchableOpacity
-            style={{ marginRight: 20 }}
-            onPress={() => console.log("hola")}
-          >
-            <Feather name="settings" size={24} color="black" />
-          </TouchableOpacity>
-        ),
-        headerLeft: () => (
-          <Text
-            style={{
-              marginLeft: 20,
-              fontSize: 20,
-              fontFamily: "Poppins_400Regular",
-            }}
-          >
-            Hola{" "}
+    <>
+      <StatusBar style="auto" />
+      <Tabs
+        tabBar={(props) => <CustomTabBar {...props} />}
+        screenOptions={{
+          headerTitle: "",
+          headerStyle: {
+            shadowColor: "transparent",
+          },
+          headerRight: () => (
+            <TouchableOpacity
+              style={{ marginRight: 20 }}
+              onPress={() => console.log("hola")}
+            >
+              <Feather name="settings" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
             <Text
               style={{
-                fontFamily: "Poppins_700Bold",
-                textTransform: "capitalize",
+                marginLeft: 20,
+                fontSize: 20,
+                fontFamily: "Poppins_400Regular",
               }}
             >
-              {session?.displayName}
+              Hola{" "}
+              <Text
+                style={{
+                  fontFamily: "Poppins_700Bold",
+                  textTransform: "capitalize",
+                }}
+              >
+                {session?.displayName}
+              </Text>
+              !
             </Text>
-            !
-          </Text>
-        ),
-      }}
-    >
-      <Tabs.Screen
-        name="home"
-        options={{
-          tabBarLabel: "Inicio",
-          title: "home",
-          headerShown: segment[2] === "take-photo" ? false : true,
+          ),
         }}
-      />
-      <Tabs.Screen
-        name="objectives"
-        options={{
-          tabBarLabel: "Objetivos",
-          title: "target",
-          headerShown: false,
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          tabBarLabel: "Perfil",
-          title: "user",
-          headerShown: false,
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="home"
+          options={{
+            tabBarLabel: "Inicio",
+            title: "home",
+            headerShown: segment[2] === "take-photo" ? false : true,
+          }}
+        />
+        <Tabs.Screen
+          name="objectives"
+          options={{
+            tabBarLabel: "Objetivos",
+            title: "target",
+            headerShown: false,
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            tabBarLabel: "Perfil",
+            title: "user",
+            headerShown: false,
+          }}
+        />
+      </Tabs>
+    </>
   );
 };
 export default MainLayout;

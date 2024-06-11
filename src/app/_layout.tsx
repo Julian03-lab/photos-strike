@@ -10,6 +10,7 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,9 +38,12 @@ const Layout = () => {
   console.log(fontError);
 
   return (
-    <SessionProvider>
-      <Slot />
-    </SessionProvider>
+    <>
+      <SessionProvider>
+        <Slot />
+      </SessionProvider>
+      <StatusBar style="dark" />
+    </>
   );
 };
 export default Layout;

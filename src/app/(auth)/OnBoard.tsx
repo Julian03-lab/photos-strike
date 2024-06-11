@@ -78,7 +78,7 @@ const OnBoardScreen = () => {
       slidesRef.current.scrollToIndex({ index: activeIndex + 1 });
     } else {
       updateViewedOnboarding();
-      router.replace("/(auth)/turn-notifications");
+      router.replace("/(auth)/turnNotifications");
     }
   };
 
