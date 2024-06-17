@@ -10,18 +10,21 @@ import { auth, db } from "root/config/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import type { IUser } from "@/utils/types";
 
 const AuthContext = React.createContext<{
   signIn: () => void;
   signOut: () => void;
-  session?: User | null;
+  session?: IUser | null;
   loading: boolean;
+  setSession: (user: IUser) => void;
 }>({
   signIn: () => null,
   signOut: () => null,
   session: null,
   loading: false,
+  setSession: () => null,
 });
 
 export function useSession() {
@@ -31,7 +34,7 @@ export function useSession() {
 }
 
 export function SessionProvider(props: React.PropsWithChildren) {
-  const [session, setSession] = useState<User | null>(null);
+  const [session, setSession] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,6 +43,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
       setLoading(true);
       const user = await AsyncStorage.getItem("@user");
       if (user) {
+        console.log("Hay usuario, es: ", user);
         setSession(JSON.parse(user));
       }
       setLoading(false);
@@ -55,11 +59,24 @@ export function SessionProvider(props: React.PropsWithChildren) {
 
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setSession(user);
-        await AsyncStorage.setItem("@user", JSON.stringify(user));
+        // console.log("Hay usuario en firebase: ", user);
+        const id = user.uid;
+        const userDoc = await getDoc(doc(db, "users", id));
+
+        if (!userDoc.exists()) {
+          setSession(null);
+          return;
+        }
+
+        const finalUser = { ...userDoc.data(), uid: id } as IUser;
+        // console.log("Usuario en firebase: ", finalUser);
+        setSession(finalUser);
+        await AsyncStorage.setItem("@user", JSON.stringify(finalUser));
+        router.replace("/(main)/home");
       } else {
         setSession(null);
       }
+      setLoading(false);
     });
 
     return () => unsub();
@@ -84,9 +101,6 @@ export function SessionProvider(props: React.PropsWithChildren) {
           photoURL: user.photoURL,
         });
       }
-
-      router.replace("/(main)/home");
-      setLoading(false);
     } catch (error: any) {
       console.log(error);
       setError(error.message);
@@ -113,6 +127,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
         signOut,
         session,
         loading,
+        setSession,
       }}
     >
       {props.children}

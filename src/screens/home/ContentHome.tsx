@@ -37,13 +37,14 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
       objectives[0],
     [selectedValue, objectives]
   );
+  const showCompletationPopup = () => {
+    if (selectedObjective.viewed) return false;
 
-  const showCompletationPopup = useMemo(
-    () =>
-      (selectedObjective.completed && !selectedObjective.viewed) ||
-      dayjs().isAfter(dayjs(selectedObjective.endingDate, "DD-MM-YYYY"), "D"),
-    [selectedObjective]
-  );
+    return (
+      selectedObjective.completed ||
+      dayjs().isAfter(dayjs(selectedObjective.endingDate, "DD-MM-YYYY"), "D")
+    );
+  };
 
   const files = useMemo(() => selectedObjective.files, [selectedObjective]);
 
@@ -77,7 +78,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
 
   return (
     <>
-      {showCompletationPopup && (
+      {showCompletationPopup() && (
         <CompletedObjective objectiveId={selectedObjective.id} />
       )}
       <FlatList

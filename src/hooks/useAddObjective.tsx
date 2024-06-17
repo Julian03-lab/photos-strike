@@ -12,11 +12,9 @@ import { useObjectivesStore } from "@/context/store";
 const useAddObjective = (
   {
     endingDate,
-    notificationTime,
     objective,
     startingDate,
     completed = false,
-    notifications = true,
   }: addObjectivesProps,
   callback: () => void
 ) => {
@@ -33,10 +31,8 @@ const useAddObjective = (
       title: objective.trim(),
       startingDate,
       endingDate,
-      notificationTime: notificationTime,
       // frecuency: frecuency === 0 ? customFrecuency : frecuency,
       completed,
-      notifications,
       principal: false,
       createdAt: new Date().toISOString(),
       totalDays: dayjs(formatDate(endingDate)).diff(

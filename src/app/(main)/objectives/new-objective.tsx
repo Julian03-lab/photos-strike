@@ -77,12 +77,12 @@ const NewObjective = () => {
         >
           {endingDate}
         </LabelButton>
-        <LabelButton
+        {/* <LabelButton
           label="Hora del recordatorio"
           onPress={() => setShowPicker("time")}
         >
           {notificationTime}
-        </LabelButton>
+        </LabelButton> */}
 
         <DateTimePickerModal
           date={new Date()}

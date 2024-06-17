@@ -4,14 +4,12 @@ export type Objective = {
   createdAt: string;
   endingDate: string;
   lastPhotoDate: string | null;
-  notificationTime: string;
-  notifications: boolean;
   principal: boolean;
   startingDate: string;
   title: string;
   totalDays: number;
   files: any[];
-  viewed: boolean;
+  viewed?: boolean;
 };
 
 export type addObjectivesProps = {
@@ -23,3 +21,11 @@ export type addObjectivesProps = {
   completed?: boolean;
   notifications?: boolean;
 };
+
+export interface IUser {
+  uid: string;
+  email: string;
+  photoURL: string;
+  displayName: string;
+  notificationTime?: string | null;
+}
