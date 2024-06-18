@@ -14,13 +14,13 @@ Una app para android realizada con React Native y Expo, permite establecer un ob
 
 ## TODO:
 
+- [ ] Ver disponibilidad de la foto
 - [ ] Permitir ver el resultado final
 - [ ] Pantalla de perfil
 - [ ] Pantalla de ajustes
 - [ ] Skeletons
 - [ ] Splash screen
 - [x] Implementar notificaciones
-- [ ] Visualizar el progreso en un calendario
 - [ ] Implementar un sistema de recompensas
 - [ ] Implementar suscripcion
 - [ ] Dividir funciones premium y gratuitas

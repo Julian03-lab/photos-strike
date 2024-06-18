@@ -1,8 +1,8 @@
-import { Camera } from "expo-camera";
+import { useCameraPermissions } from "expo-camera";
 import { router } from "expo-router";
 
 const useGoToPhoto = () => {
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [permission, requestPermission] = useCameraPermissions();
 
   async function goToTakePhoto() {
     // if (permission?.canAskAgain === false && permission?.status !== "granted") {

@@ -141,7 +141,7 @@ const CameraComponent = ({ objectiveId }: { objectiveId: string }) => {
         setImage(photo);
         setLoading(false);
       }
-      console.log(photo);
+      // console.log(photo);
     }
   }
 

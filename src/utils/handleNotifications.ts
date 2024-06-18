@@ -50,7 +50,7 @@ export async function onDisplayNotification(hour: number, minutes: number) {
     const trigger: TimestampTrigger = {
       type: TriggerType.TIMESTAMP,
       timestamp: date.toDate().getTime(),
-      repeatFrequency: RepeatFrequency.HOURLY,
+      repeatFrequency: RepeatFrequency.DAILY,
       // alarmManager: {
       //   allowWhileIdle: true,
       // },

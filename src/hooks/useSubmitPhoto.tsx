@@ -61,11 +61,11 @@ const useSubmitPhoto = (objectiveId: string) => {
 
       const batch = writeBatch(db);
 
-      const emptyDate =
-        dayjs(actualObjective.lastPhotoDate, "DD-MM-YYYY")
-          .add(1, "day")
-          .format("DD-MM-YYYY") ||
-        dayjs(actualObjective.startingDate, "DD-MM-YYYY");
+      const emptyDate = actualObjective.lastPhotoDate
+        ? dayjs(actualObjective.lastPhotoDate, "DD-MM-YYYY")
+            .add(1, "day")
+            .format("DD-MM-YYYY")
+        : dayjs(actualObjective.startingDate, "DD-MM-YYYY");
 
       for (let i = 0; i < emptyDays; i++) {
         const emptyFile = {
@@ -85,6 +85,7 @@ const useSubmitPhoto = (objectiveId: string) => {
       }
 
       batch.set(filesRef, imageToSave);
+
       batch.update(doc(db, `users/${session?.uid}/objectives/${objectiveId}`), {
         lastPhotoDate: dayjs().format("DD-MM-YYYY"),
       });
@@ -105,7 +106,7 @@ const useSubmitPhoto = (objectiveId: string) => {
 
       onSuccess && onSuccess();
     } catch (error) {
-      console.log(error);
+      console.log("error useSubmitPhoto: ", error);
       Toast.show({
         type: "error",
         text1: "Error al guardar la imagen",

@@ -10,12 +10,12 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-type Option = { label: string; value: string };
+type Option = { label: string; value: string; principal: boolean };
 
 type CustomPickerProps = {
   options: Option[];
   selectedValue: { label: string; value: string };
-  onValueChange: (value: { label: string; value: string }) => void;
+  onValueChange: (value: Option) => void;
 };
 
 const CustomPicker = ({

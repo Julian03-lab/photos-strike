@@ -115,11 +115,20 @@ const MiniPhotoCard = ({
         </Text>
         {!imageUrl ? (
           empty === true ? (
-            <Feather name="eye" size={24} />
+            <LottieView
+              autoPlay={false}
+              loop={false}
+              ref={lockedRef}
+              style={{
+                width: 56,
+                height: 56,
+              }}
+              source={require("root/assets/animations/locked.json")}
+            />
           ) : !unlocked ? (
             //   <Feather name="lock" size={24} />
             <LottieView
-              autoPlay
+              autoPlay={false}
               loop={false}
               ref={lockedRef}
               style={{

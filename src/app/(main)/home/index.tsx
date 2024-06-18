@@ -47,7 +47,7 @@ const HomePage = (): React.JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <Button onPress={onCancelNotification} title="Cancel Notification" />
+      {/* <Button onPress={onCancelNotification} title="Cancel Notification" /> */}
       {objectives.length > 0 ? (
         <ContentHome objectives={objectives} />
       ) : (
