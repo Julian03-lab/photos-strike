@@ -1,11 +1,11 @@
 import CustomPicker from "@/components/buttons/CustomPicker";
 import MiniPhotoCard from "@/components/cards/MiniPhotoCard";
 import CompletedObjective from "@/components/popups/CompletedObjective";
+import HomeTextSkeleton from "@/components/skeletons/HomeTextSkeleton";
 import useCalculateRemainingTime from "@/hooks/useCalculateRemainingTime";
 import useObjectiveDetails from "@/hooks/useObjectiveDetails";
 import { Objective } from "@/utils/types";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { Skeleton } from "react-native-skeletons";
 
 const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
   const {
@@ -44,7 +44,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
             </View>
 
             {loadingText ? (
-              <Skeleton height={74} />
+              <HomeTextSkeleton />
             ) : selectedObjective.completed ? (
               <Text style={styles.subtitle}>Objetivo completado</Text>
             ) : (

@@ -43,7 +43,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
       setLoading(true);
       const user = await AsyncStorage.getItem("@user");
       if (user) {
-        console.log("Hay usuario, es: ", user);
+        // console.log("Hay usuario, es: ", user);
         setSession(JSON.parse(user));
       }
       setLoading(false);

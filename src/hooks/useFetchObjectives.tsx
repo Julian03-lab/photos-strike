@@ -8,12 +8,13 @@ import { db } from "root/config/firebase";
 const useFetchObjectives = () => {
   const { session } = useSession();
   const { objectives, setObjectives } = useObjectivesStore();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const uid = session?.uid as string;
 
   const fetchObjectives = async () => {
     try {
+      setLoading(true);
       const queryObjectives = query(
         collection(db, `users/${uid}/objectives`),
         orderBy("createdAt", "desc")

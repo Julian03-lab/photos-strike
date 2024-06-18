@@ -35,8 +35,6 @@ const Layout = () => {
     return null;
   }
 
-  console.log(fontError);
-
   return (
     <>
       <SessionProvider>

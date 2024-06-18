@@ -29,8 +29,6 @@ const useObjectiveDetails = (objectives: Objective[]) => {
     [selectedValue, objectives]
   );
 
-  console.log(selectedObjective);
-
   const showCompletationPopup = () => {
     if (selectedObjective.viewed) return false;
 

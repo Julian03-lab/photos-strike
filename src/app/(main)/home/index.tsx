@@ -10,6 +10,7 @@ import {
 } from "@/utils/handleNotifications";
 import { router } from "expo-router";
 import { useSession } from "@/context/ctx";
+import HomeSkeleton from "@/components/skeletons/HomeSkeleton";
 
 const HomePage = (): React.JSX.Element => {
   const { loading, objectives } = useFetchObjectives();
@@ -28,7 +29,7 @@ const HomePage = (): React.JSX.Element => {
       const [hour, minutes] = session?.notificationTime.split(":").map(Number);
       checkNotification().then((res) => {
         if (!res) {
-          console.log("Seteando notificacion, ", hour, minutes);
+          //  console.log("Seteando notificacion, ", hour, minutes);
           onDisplayNotification(hour, minutes);
         }
       });
@@ -40,7 +41,7 @@ const HomePage = (): React.JSX.Element => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <HomeSkeleton />
       </View>
     );
   }
