@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 export const checkNotification = async () => {
   const notificationStatus = await AsyncStorage.getItem("@notificationId");
 
-  // For debugging purposes
+  //For debugging purposes
   // notifee
   //   .getTriggerNotificationIds()
   //   .then((ids) => console.log("All trigger notifications: ", ids));

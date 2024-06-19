@@ -15,12 +15,9 @@ Una app para android realizada con React Native y Expo, permite establecer un ob
 
 ## TODO:
 
-- [x] Skeletons
 - [ ] Permitir ver el resultado final
 - [ ] Pantalla de perfil
 - [ ] Pantalla de ajustes
-- [ ] Splash screen
 - [ ] Implementar un sistema de recompensas
 - [ ] Implementar suscripcion
 - [ ] Dividir funciones premium y gratuitas
-- [/] Crear logo
