@@ -4,15 +4,19 @@ import { StatusBar } from "react-native";
 export default function HomeLayoutNav() {
   return (
     <>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="take-photo"
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: "#fff",
+          },
+        }}
+      >
+        <Stack.Screen name="modal" options={{
+          presentation: "modal",
+
+        }}/>
+        </Stack>
       <StatusBar backgroundColor={"black"} />
     </>
   );

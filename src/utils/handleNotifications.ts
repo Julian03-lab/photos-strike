@@ -7,23 +7,34 @@ import notifee, {
 } from "@notifee/react-native";
 import dayjs from "dayjs";
 
-export const checkNotification = async () => {
-  const notificationStatus = await AsyncStorage.getItem("@notificationId");
+const formatTime = (hours: number, minutes: number) => {
+  const hour = hours < 10 ? `0${hours}` : hours;
+  const minute = minutes < 10 ? `0${minutes}` : minutes;
+  return `${hour}:${minute}`;
+};
 
-  //For debugging purposes
-  // notifee
-  //   .getTriggerNotificationIds()
-  //   .then((ids) => console.log("All trigger notifications: ", ids));
-  // console.log(
-  //   "📁Archivo: handleNotifications.ts | Linea: 10 | notificationStatus -> ",
-  //   notificationStatus
-  // );
+export const checkNotification = async (time: string) => {
+  const notificationStatus = await AsyncStorage.getItem("@notificationTime");
 
-  return !!notificationStatus;
+  // For debugging purposes
+  notifee.getTriggerNotificationIds().then((ids) => console.log("All trigger notifications: ", ids));
+   console.log(
+     "📁Archivo: handleNotifications.ts | Linea: 10 | notificationStatus -> ",
+     notificationStatus
+   );
+
+  if (!notificationStatus) {
+    return false;
+  }
+
+  return notificationStatus === time;
 };
 
 export async function onDisplayNotification(hour: number, minutes: number) {
+  console.log('📁Archivo: handleNotifications.ts | Linea: 28 | Seteando notifiacion');
   try {
+
+    await onCancelNotification()
     // Request permissions (required for iOS)
     await notifee.requestPermission();
 
@@ -43,7 +54,6 @@ export async function onDisplayNotification(hour: number, minutes: number) {
       .set("second", 0);
 
     if (date.isBefore(dayjs())) {
-      console.log("Agregando un dia");
       date = date.add(1, "day");
     }
 
@@ -57,7 +67,7 @@ export async function onDisplayNotification(hour: number, minutes: number) {
     };
 
     // Display a notification
-    const notificationId = await notifee.createTriggerNotification(
+    await notifee.createTriggerNotification(
       {
         title: "No olvides tomar la foto de hoy!",
         body: "Toma la foto de tu progreso diario para seguir avanzando en tu objetivo",
@@ -72,27 +82,21 @@ export async function onDisplayNotification(hour: number, minutes: number) {
     );
 
     // Save the notification id to the device storage
-    await AsyncStorage.setItem("@notificationId", notificationId);
+    await AsyncStorage.setItem("@notificationTime", formatTime(hour, minutes));
+    console.log('📁Archivo: handleNotifications.ts | Linea: 79 Notificacion Seteada');
   } catch (error) {
     console.log(error);
   }
 }
 
 export async function onCancelNotification() {
-  // Retrieve the notification id from the device storage
   try {
-    console.log("Cancelando notificacion");
-    const notificationId = await AsyncStorage.getItem("@notificationId");
-
-    if (!notificationId) {
-      return;
-    }
 
     // Cancel the notification
-    await notifee.cancelNotification(notificationId);
+    await notifee.cancelAllNotifications()
 
     // Remove the notification id from the device storage
-    await AsyncStorage.removeItem("@notificationId");
+    await AsyncStorage.removeItem("@notificationTime");
   } catch (error) {
     console.log(error);
   }

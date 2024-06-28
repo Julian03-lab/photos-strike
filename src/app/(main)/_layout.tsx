@@ -36,7 +36,7 @@ const CustomTabBar = ({
     };
   }, []);
 
-  if (segment.length === 3 && segment[2] === "take-photo") {
+  if (segment.length === 3 && (segment[2] === "take-photo" || segment[2] === "modal")) {
     return null;
   }
 
@@ -177,7 +177,7 @@ const MainLayout = () => {
           options={{
             tabBarLabel: "Inicio",
             title: "home",
-            headerShown: segment[2] === "take-photo" ? false : true,
+            headerShown: !["[objectiveId]", "take-photo", "modal"].includes(segment[2]),
           }}
         />
         <Tabs.Screen

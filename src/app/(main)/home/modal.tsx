@@ -15,7 +15,7 @@ import { router } from "expo-router";
 import useUpdateUser from "@/hooks/useUpdateUser";
 import { useSession } from "@/context/ctx";
 
-export default function Modal() {
+export default function TimeModal() {
   const [handleUpdate, loading] = useUpdateUser();
   const { session, setSession } = useSession();
   const [confirmationOpen, setConfirmationOpen] = useState(false);

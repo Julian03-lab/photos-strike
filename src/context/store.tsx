@@ -7,9 +7,10 @@ interface ObjectivesStore {
   appendObjectives: (objectives: Objective[]) => void;
   removeObjective: (objectiveId: string) => void;
   updateObjective: (objectiveId: string, newData: any) => void;
+  getObjective: (objectiveId: string) => Objective | undefined;
 }
 
-export const useObjectivesStore = create<ObjectivesStore>((set) => ({
+export const useObjectivesStore = create<ObjectivesStore>((set, get) => ({
   objectives: [],
   setObjectives: (objectives) => set({ objectives }),
   appendObjectives: (objectives) =>
@@ -26,4 +27,6 @@ export const useObjectivesStore = create<ObjectivesStore>((set) => ({
         objective.id === objectiveId ? { ...objective, ...newData } : objective
       ),
     })),
+  getObjective: (objectiveId) =>
+    get().objectives.find((obj) => obj.id === objectiveId),
 }));

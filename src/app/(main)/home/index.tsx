@@ -19,23 +19,23 @@ const HomePage = (): React.JSX.Element => {
   useEffect(() => {
     if (loading) return;
 
-    if (session?.notificationTime === undefined) {
-      router.push("/modal/");
-      return;
-    }
+    console.log('📁Archivo: home/index.tsx | Linea: 22 | notification -> ', session);
 
-    if (session?.notificationTime !== null) {
-      // console.log(session?.notificationTime);
-      const [hour, minutes] = session?.notificationTime.split(":").map(Number);
-      checkNotification().then((res) => {
-        if (!res) {
-          //  console.log("Seteando notificacion, ", hour, minutes);
-          onDisplayNotification(hour, minutes);
-        }
-      });
-    } else {
-      onCancelNotification();
-    }
+     if (session?.notificationTime === undefined) {
+       router.push("/home/modal");
+       return;
+     }
+
+     if (session?.notificationTime !== null) {
+       const [hour, minutes] = session?.notificationTime.split(":").map(Number);
+       checkNotification(session?.notificationTime).then((exist) => {
+         if (!exist) {
+           onDisplayNotification(hour, minutes);
+         }
+       });
+     } else {
+       onCancelNotification();
+     }
   }, [loading]);
 
   if (loading) {
@@ -48,7 +48,6 @@ const HomePage = (): React.JSX.Element => {
 
   return (
     <View style={styles.container}>
-      {/* <Button onPress={onCancelNotification} title="Cancel Notification" /> */}
       {objectives.length > 0 ? (
         <ContentHome objectives={objectives} />
       ) : (
