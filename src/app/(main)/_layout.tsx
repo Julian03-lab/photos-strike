@@ -12,6 +12,8 @@ import {
 import { useSession } from "@/context/ctx";
 import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
+import AnimatedNumber from "react-native-animated-numbers";
+import Points from "@/components/Points";
 
 const CustomTabBar = ({
   state,
@@ -36,7 +38,10 @@ const CustomTabBar = ({
     };
   }, []);
 
-  if (segment.length === 3 && (segment[2] === "take-photo" || segment[2] === "modal")) {
+  if (
+    segment.length === 3 &&
+    (segment[2] === "take-photo" || segment[2] === "modal")
+  ) {
     return null;
   }
 
@@ -151,24 +156,13 @@ const MainLayout = () => {
             </TouchableOpacity>
           ),
           headerLeft: () => (
-            <Text
+            <View
               style={{
-                marginLeft: 20,
-                fontSize: 20,
-                fontFamily: "Poppins_400Regular",
+                marginLeft: 16,
               }}
             >
-              Hola{" "}
-              <Text
-                style={{
-                  fontFamily: "Poppins_700Bold",
-                  textTransform: "capitalize",
-                }}
-              >
-                {session?.displayName}
-              </Text>
-              !
-            </Text>
+              <Points />
+            </View>
           ),
         }}
       >
@@ -177,7 +171,9 @@ const MainLayout = () => {
           options={{
             tabBarLabel: "Inicio",
             title: "home",
-            headerShown: !["[objectiveId]", "take-photo", "modal"].includes(segment[2]),
+            headerShown: !["[objectiveId]", "take-photo", "modal"].includes(
+              segment[2]
+            ),
           }}
         />
         <Tabs.Screen

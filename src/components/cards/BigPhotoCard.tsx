@@ -9,14 +9,38 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import UnlockButton from "../buttons/UnlockButton";
+import { useObjectivesStore } from "@/context/store";
+import useUpdatePoints from "@/hooks/useUpdatePoints";
+import useUpdateFile from "@/hooks/useUpdateFile";
 
 type BigPhotoCardProps = {
   src: string | undefined;
   photoOpened: boolean;
   closePhoto: () => void;
+  available: boolean;
+  fileId: string;
+  objectiveId: string;
 };
 
-const BigPhotoCard = ({ src, photoOpened, closePhoto }: BigPhotoCardProps) => {
+const BigPhotoCard = ({
+  src,
+  photoOpened,
+  closePhoto,
+  available,
+  fileId,
+  objectiveId,
+}: BigPhotoCardProps) => {
+  const { updateFile } = useObjectivesStore();
+  const { handleUpdate: handleUpdatePoints, loading } = useUpdatePoints();
+  const [handleUpdateDbFile] = useUpdateFile();
+
+  const handlePress = () => {
+    handleUpdatePoints(-150);
+    handleUpdateDbFile(objectiveId, fileId, { bigView: true });
+    updateFile(objectiveId, fileId, { bigView: true });
+  };
+
   return (
     <Modal
       visible={photoOpened}
@@ -27,7 +51,14 @@ const BigPhotoCard = ({ src, photoOpened, closePhoto }: BigPhotoCardProps) => {
       <TouchableWithoutFeedback onPress={closePhoto}>
         <View style={styles.centeredView}>
           <Pressable>
-            <View>
+            <View
+              style={{
+                justifyContent: "center",
+              }}
+            >
+              {!available && (
+                <UnlockButton onPress={handlePress} loading={loading} />
+              )}
               <TouchableOpacity
                 onPress={closePhoto}
                 style={{
@@ -41,6 +72,7 @@ const BigPhotoCard = ({ src, photoOpened, closePhoto }: BigPhotoCardProps) => {
               </TouchableOpacity>
               <Image
                 source={{ uri: src }}
+                blurRadius={available ? 0 : 45}
                 style={{
                   width: "100%",
                   aspectRatio: 9 / 16,

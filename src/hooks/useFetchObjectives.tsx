@@ -33,7 +33,9 @@ const useFetchObjectives = () => {
           return {
             id: doc.id,
             ...objectiveData,
-            files: files.docs.map((doc) => doc.data()),
+            files: files.docs.map((doc) => {
+              return { ...doc.data(), id: doc.id };
+            }),
           } as Objective;
         })
       );

@@ -1,3 +1,13 @@
+export type IFile = {
+  createdAt?: string;
+  url?: string;
+  empty?: boolean;
+  isPlaceholder?: boolean;
+  unlocked?: boolean;
+  bigView?: boolean;
+  id: string;
+};
+
 export type Objective = {
   id: string;
   completed: boolean;
@@ -8,7 +18,7 @@ export type Objective = {
   startingDate: string;
   title: string;
   totalDays: number;
-  files: any[];
+  files: IFile[];
   viewed?: boolean;
 };
 
@@ -28,4 +38,5 @@ export interface IUser {
   photoURL: string;
   displayName: string;
   notificationTime?: string | null;
+  points: number;
 }

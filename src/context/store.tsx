@@ -8,6 +8,7 @@ interface ObjectivesStore {
   removeObjective: (objectiveId: string) => void;
   updateObjective: (objectiveId: string, newData: any) => void;
   getObjective: (objectiveId: string) => Objective | undefined;
+  updateFile: (objectiveId: string, fileId: string, newData: any) => void;
 }
 
 export const useObjectivesStore = create<ObjectivesStore>((set, get) => ({
@@ -29,4 +30,17 @@ export const useObjectivesStore = create<ObjectivesStore>((set, get) => ({
     })),
   getObjective: (objectiveId) =>
     get().objectives.find((obj) => obj.id === objectiveId),
+  updateFile: (objectiveId, fileId, newData) =>
+    set((state) => ({
+      objectives: state.objectives.map((objective) =>
+        objective.id === objectiveId
+          ? {
+              ...objective,
+              files: objective.files.map((file) =>
+                file.id === fileId ? { ...file, ...newData } : file
+              ),
+            }
+          : objective
+      ),
+    })),
 }));

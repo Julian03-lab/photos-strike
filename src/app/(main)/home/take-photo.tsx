@@ -4,7 +4,7 @@ import { View, Text } from "react-native";
 const TakePhoto = () => {
   const { objectiveId } = useGlobalSearchParams();
 
-  console.log(objectiveId);
+  // console.log(objectiveId);
   return (
     <View
       style={{

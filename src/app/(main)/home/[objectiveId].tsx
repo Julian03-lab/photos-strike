@@ -2,7 +2,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import ResultScrollBar from "@/components/home/ResultScrollBar";
 import { useObjectivesStore } from "@/context/store";
 import { Feather } from "@expo/vector-icons";
-import { useGlobalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -60,21 +60,51 @@ const ObjectiveResult = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>{objective?.title}</Text>
-        <Text style={styles.subtitle}>{objective?.totalDays} dias</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 12,
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity onPress={() => router.navigate("home")}>
+            <Feather name="arrow-left" size={32} />
+          </TouchableOpacity>
+          <Text style={styles.title} numberOfLines={2}>
+            {objective?.title}
+          </Text>
+        </View>
       </View>
+      {/* <Text style={styles.subtitle}>
+        <Text
+          style={{
+            fontFamily: "Poppins_500Medium",
+          }}
+        >
+          Total:
+        </Text>{" "}
+        {objectiveCompletedDays}/{objective?.totalDays} dias
+      </Text> */}
       {/* Content */}
       <View style={styles.content}>
-        {selectedDay > 0 ? <TouchableOpacity onPress={handlePreviousDay}>
-          <Feather name="arrow-left-circle" size={32} />
-        </TouchableOpacity> : <View style={{width: 32}}/>}
+        {selectedDay > 0 ? (
+          <TouchableOpacity onPress={handlePreviousDay}>
+            <Feather name="arrow-left-circle" size={32} />
+          </TouchableOpacity>
+        ) : (
+          <View style={{ width: 32 }} />
+        )}
         <Image
           source={{ uri: completedDays[selectedDay].url }}
           style={styles.image}
         />
-       {selectedDay < completedDays.length - 1 ? <TouchableOpacity onPress={handleNextDay}>
-          <Feather name="arrow-right-circle" size={32} />
-        </TouchableOpacity> : <View style={{width: 32}}/>}
+        {selectedDay < completedDays.length - 1 ? (
+          <TouchableOpacity onPress={handleNextDay}>
+            <Feather name="arrow-right-circle" size={32} />
+          </TouchableOpacity>
+        ) : (
+          <View style={{ width: 32 }} />
+        )}
       </View>
       {/* Bar */}
       <ResultScrollBar
@@ -83,11 +113,17 @@ const ObjectiveResult = () => {
         handlePress={findDayIndex}
       />
       {/* Button */}
-      {/* <View style={{ paddingHorizontal: 20 }}>
-        <PrimaryButton onPress={() => null}>
-          Ver resultado completo
+      <View style={{ paddingHorizontal: 20 }}>
+        <PrimaryButton
+          onPress={() => null}
+          textStyles={{
+            fontSize: 18,
+            fontFamily: "Poppins_500Medium",
+          }}
+        >
+          Ver comparacion final
         </PrimaryButton>
-      </View> */}
+      </View>
     </SafeAreaView>
   );
 };
@@ -109,11 +145,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Poppins_500Medium",
-    fontSize: 32,
+    fontSize: 28,
   },
   subtitle: {
     fontFamily: "Poppins_400Regular",
-    fontSize: 16,
+    fontSize: 20,
+    paddingHorizontal: 20,
   },
   content: {
     paddingHorizontal: 20,

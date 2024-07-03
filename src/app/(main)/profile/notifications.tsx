@@ -11,6 +11,7 @@ import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import dayjs from "dayjs";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const NotificationScreen = () => {
   const { session, setSession } = useSession();
@@ -30,6 +31,10 @@ const NotificationScreen = () => {
     setNotificationTime(null);
     await onCancelNotification();
     setSession({ ...session, notificationTime: null });
+    await AsyncStorage.setItem(
+      "@user",
+      JSON.stringify({ ...session, notificationTime: null })
+    );
     await handleUpdateUser({ notificationTime: null });
 
     console.log("Notificacion eliminada");
@@ -42,6 +47,10 @@ const NotificationScreen = () => {
     setNotificationTime(time);
     setShowTimePicker(false);
     setSession({ ...session, notificationTime: time });
+    await AsyncStorage.setItem(
+      "@user",
+      JSON.stringify({ ...session, notificationTime: time })
+    );
     await handleUpdateUser({ notificationTime: time });
     await onDisplayNotification(hours, minutes);
   };

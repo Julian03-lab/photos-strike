@@ -5,7 +5,7 @@ import HomeTextSkeleton from "@/components/skeletons/HomeTextSkeleton";
 import useCalculateRemainingTime from "@/hooks/useCalculateRemainingTime";
 import useObjectiveDetails from "@/hooks/useObjectiveDetails";
 import { Objective } from "@/utils/types";
-import { Link } from "expo-router";
+import { Link, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
 const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
@@ -28,11 +28,8 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
       )}
       <FlatList
         contentContainerStyle={{ paddingVertical: 20 }}
-        // onRefresh={fetchObjectives}
-        // refreshing={false}
         ListHeaderComponent={
           <>
-            <Link href={`/home/${selectedObjective.id}`}>Ir al resultado</Link>
             <Text style={styles.title}>Objetivo del dia</Text>
             <View style={styles.bar}>
               <CustomPicker
@@ -48,7 +45,15 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
             {loadingText ? (
               <HomeTextSkeleton />
             ) : selectedObjective.completed ? (
-              <Text style={styles.subtitle}>Objetivo completado</Text>
+              <View>
+                <Text style={styles.subtitle}>Objetivo completado</Text>
+                <Link
+                  href={`/home/${selectedObjective.id}`}
+                  style={styles.link}
+                >
+                  Ir al resultado
+                </Link>
+              </View>
             ) : (
               <Text style={styles.subtitle}>{textToShow}</Text>
             )}
@@ -68,8 +73,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
               index={index}
               imageUrl={selectedObjective.files[index]?.url}
               objectiveId={selectedObjective.id}
-              unlocked={item.unlocked}
-              empty={item.empty}
+              file={item}
             />
           )
         }
@@ -104,5 +108,10 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 24,
     fontFamily: "Poppins_500Medium",
+  },
+  link: {
+    fontSize: 18,
+    fontFamily: "Poppins_400Regular",
+    color: "#51C878",
   },
 });

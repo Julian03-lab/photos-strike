@@ -22,7 +22,6 @@ import useSubmitPhoto from "@/hooks/useSubmitPhoto";
 import LottieView from "lottie-react-native";
 import { Circle, Path, Svg, SvgProps } from "react-native-svg";
 
-const CAMERA_ICON_SIZE = 64;
 const OTHER_ICON_SIZE = 24;
 
 const Shutter = (props: SvgProps) => (
@@ -48,7 +47,8 @@ const PhotoPreview = ({
   const [submited, setSubmited] = useState(false);
 
   const handleSend = async () => {
-    await saveImage(image, () => setSubmited(true));
+    // await saveImage(image, () => setSubmited(true));
+    setSubmited(true);
   };
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const PhotoPreview = ({
         <LottieView
           source={require("root/assets/animations/uploaded.json")}
           style={{ width: "100%", height: "100%", zIndex: 2 }}
-          onAnimationFinish={() => router.replace("/home/")}
+          onAnimationFinish={() => router.replace("/home?completed=true")}
           loop={false}
           autoPlay
           speed={1.5}

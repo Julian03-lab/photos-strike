@@ -17,6 +17,14 @@ export default function ProfileLayout() {
           headerShadowVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="account"
+        options={{
+          title: "Configurar cuenta",
+          // headerShadowVisible: false,
+        }}
+      />
     </Stack>
   );
 }

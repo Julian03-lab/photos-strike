@@ -17,11 +17,11 @@ export const checkNotification = async (time: string) => {
   const notificationStatus = await AsyncStorage.getItem("@notificationTime");
 
   // For debugging purposes
-  notifee.getTriggerNotificationIds().then((ids) => console.log("All trigger notifications: ", ids));
-   console.log(
-     "📁Archivo: handleNotifications.ts | Linea: 10 | notificationStatus -> ",
-     notificationStatus
-   );
+  // notifee.getTriggerNotificationIds().then((ids) => console.log("All trigger notifications: ", ids));
+  //  console.log(
+  //    "📁Archivo: handleNotifications.ts | Linea: 10 | notificationStatus -> ",
+  //    notificationStatus
+  //  );
 
   if (!notificationStatus) {
     return false;
@@ -31,10 +31,11 @@ export const checkNotification = async (time: string) => {
 };
 
 export async function onDisplayNotification(hour: number, minutes: number) {
-  console.log('📁Archivo: handleNotifications.ts | Linea: 28 | Seteando notifiacion');
+  console.log(
+    "📁Archivo: handleNotifications.ts | Linea: 28 | Seteando notifiacion"
+  );
   try {
-
-    await onCancelNotification()
+    await onCancelNotification();
     // Request permissions (required for iOS)
     await notifee.requestPermission();
 
@@ -83,7 +84,9 @@ export async function onDisplayNotification(hour: number, minutes: number) {
 
     // Save the notification id to the device storage
     await AsyncStorage.setItem("@notificationTime", formatTime(hour, minutes));
-    console.log('📁Archivo: handleNotifications.ts | Linea: 79 Notificacion Seteada');
+    console.log(
+      "📁Archivo: handleNotifications.ts | Linea: 79 Notificacion Seteada"
+    );
   } catch (error) {
     console.log(error);
   }
@@ -91,9 +94,8 @@ export async function onDisplayNotification(hour: number, minutes: number) {
 
 export async function onCancelNotification() {
   try {
-
     // Cancel the notification
-    await notifee.cancelAllNotifications()
+    await notifee.cancelAllNotifications();
 
     // Remove the notification id from the device storage
     await AsyncStorage.removeItem("@notificationTime");

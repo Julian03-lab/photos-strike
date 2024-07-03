@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import dayjs from "dayjs"; // Assuming dayjs is installed
 import formatDate from "@/utils/formatDate";
-import { Objective } from "@/utils/types";
+import { IFile, Objective } from "@/utils/types";
 
 type Option = { label: string; value: string; principal: boolean };
 
@@ -45,7 +45,7 @@ const useObjectiveDetails = (objectives: Objective[]) => {
     "day"
   );
 
-  const cardsToShow: any[] = useMemo(() => {
+  const cardsToShow: IFile[] = useMemo(() => {
     const unlockedPhotos = Array.from({
       length: selectedObjective.totalDays - files.length,
     }).map((_, index) => ({

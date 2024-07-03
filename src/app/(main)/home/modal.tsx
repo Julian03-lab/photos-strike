@@ -14,6 +14,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { router } from "expo-router";
 import useUpdateUser from "@/hooks/useUpdateUser";
 import { useSession } from "@/context/ctx";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function TimeModal() {
   const [handleUpdate, loading] = useUpdateUser();
@@ -24,15 +25,22 @@ export default function TimeModal() {
   );
   const [showTimePicker, setShowTimePicker] = useState(false);
 
-  const handleClose = () => {
-    router.push("/(main)/home");
-    if (session) setSession({ ...session, notificationTime: null });
+  const updateSession = async (newData: any) => {
+    if (session) {
+      setSession(newData);
+      await AsyncStorage.setItem("@user", JSON.stringify(newData));
+    }
   };
 
-  const handleChange = () => {
+  const handleClose = async () => {
+    router.push("/(main)/home");
+    await updateSession({ ...session, notificationTime: null });
+  };
+
+  const handleChange = async () => {
     handleUpdate({ notificationTime });
 
-    if (session) setSession({ ...session, notificationTime });
+    await updateSession({ ...session, notificationTime });
 
     router.push("/(main)/home");
   };

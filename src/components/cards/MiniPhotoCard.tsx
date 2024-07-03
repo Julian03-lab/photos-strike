@@ -5,21 +5,20 @@ import LottieView from "lottie-react-native";
 import { useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import BigPhotoCard from "./BigPhotoCard";
+import { IFile } from "@/utils/types";
 
 type CardProps = {
   index: number;
-  unlocked?: boolean;
   imageUrl?: string;
   objectiveId: string;
-  empty?: boolean;
+  file: IFile;
 };
 
 const MiniPhotoCard = ({
   index,
-  unlocked = false,
   imageUrl,
   objectiveId,
-  empty,
+  file: { empty, unlocked, bigView, id },
 }: CardProps) => {
   const lockedRef: any = useRef(null);
   const unlockedRef: any = useRef(null);
@@ -56,6 +55,9 @@ const MiniPhotoCard = ({
         src={imageUrl}
         photoOpened={openPhoto}
         closePhoto={() => setOpenPhoto(false)}
+        available={bigView || false}
+        fileId={id}
+        objectiveId={objectiveId}
       />
       <TouchableOpacity
         activeOpacity={0.6}

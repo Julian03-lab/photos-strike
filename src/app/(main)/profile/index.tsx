@@ -4,8 +4,7 @@ import { useSession } from "@/context/ctx";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, Image, StyleSheet, Text, View } from "react-native";
 
 const ProfileScreen = () => {
   const { signOut, session } = useSession();
@@ -37,7 +36,7 @@ const ProfileScreen = () => {
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
         <FlatButton
-          onPress={() => null}
+          onPress={() => router.push("/profile/stats")}
           leftIcon={
             <Feather name="bar-chart-2" size={24} color="rgba(32,52,79,0.7)" />
           }
@@ -52,7 +51,7 @@ const ProfileScreen = () => {
           Estadisticas
         </FlatButton>
         <FlatButton
-          onPress={() => null}
+          onPress={() => router.push("/profile/account")}
           leftIcon={
             <Feather name="user" size={24} color="rgba(32,52,79,0.7)" />
           }
