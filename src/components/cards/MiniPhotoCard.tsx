@@ -56,7 +56,7 @@ const MiniPhotoCard = ({
         photoOpened={openPhoto}
         closePhoto={() => setOpenPhoto(false)}
         available={bigView || false}
-        fileId={id}
+        fileId={id as string}
         objectiveId={objectiveId}
       />
       <TouchableOpacity

@@ -5,7 +5,7 @@ export type IFile = {
   isPlaceholder?: boolean;
   unlocked?: boolean;
   bigView?: boolean;
-  id: string;
+  id?: string;
 };
 
 export type Objective = {

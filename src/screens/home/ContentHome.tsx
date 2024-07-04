@@ -5,7 +5,7 @@ import HomeTextSkeleton from "@/components/skeletons/HomeTextSkeleton";
 import useCalculateRemainingTime from "@/hooks/useCalculateRemainingTime";
 import useObjectiveDetails from "@/hooks/useObjectiveDetails";
 import { Objective } from "@/utils/types";
-import { Link, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { Link } from "expo-router";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
 const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
