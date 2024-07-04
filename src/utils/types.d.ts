@@ -39,4 +39,7 @@ export interface IUser {
   displayName: string;
   notificationTime?: string | null;
   points: number;
+  gender?: string;
+  birthday?: string;
+  country?: string;
 }

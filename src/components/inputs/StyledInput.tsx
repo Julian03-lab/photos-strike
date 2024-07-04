@@ -52,10 +52,11 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
     fontSize: 16,
     color: "#0f0f0f",
-    backgroundColor: "#EAEEEA",
+    backgroundColor: "#CAE7CB",
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#EAEEEA",
+    borderColor: "#CAE7CB",
+    opacity: 0.6,
   },
   label: {
     fontFamily: "Poppins_400Regular",

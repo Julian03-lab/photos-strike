@@ -18,6 +18,8 @@ const HomePage = (): React.JSX.Element => {
   const { session, loading: sessionLoading } = useSession();
   const { completed } = useLocalSearchParams();
 
+  console.log(session);
+
   useEffect(() => {
     if (loading || sessionLoading) return;
 
@@ -46,14 +48,17 @@ const HomePage = (): React.JSX.Element => {
     );
   }
 
+  console.log(objectives);
+
   return (
     <View style={styles.container}>
       <CompletedDayPopup open={completed === "true"} />
-      {objectives.length > 0 ? (
+      <ContentHome objectives={objectives} />
+      {/* {objectives.length > 0 ? (
         <ContentHome objectives={objectives} />
       ) : (
         <EmptyHome />
-      )}
+      )} */}
     </View>
   );
 };

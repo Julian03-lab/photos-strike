@@ -47,7 +47,7 @@ const PrimaryButton = ({
           {icon}
         </>
       ) : (
-        <ActivityIndicator color="#fff" size={24} />
+        <ActivityIndicator color="#fff" size={33} />
       )}
     </TouchableOpacity>
   );

@@ -10,7 +10,7 @@ import { IFile } from "@/utils/types";
 type CardProps = {
   index: number;
   imageUrl?: string;
-  objectiveId: string;
+  objectiveId: string | undefined;
   file: IFile;
 };
 
@@ -25,6 +25,8 @@ const MiniPhotoCard = ({
   const [permission, requestPermission] = useCameraPermissions();
   const [openPhoto, setOpenPhoto] = useState(false);
   // console.log(permission);
+
+  if (!objectiveId) return null;
 
   const handlePress = async () => {
     if (empty) return;

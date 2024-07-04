@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 20,
     flex: 1,
   },
   title: {

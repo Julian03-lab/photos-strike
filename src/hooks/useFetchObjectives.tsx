@@ -21,6 +21,12 @@ const useFetchObjectives = () => {
       );
       const snapshot = await getDocs(queryObjectives);
 
+      if (snapshot.empty) {
+        setObjectives([]);
+        setLoading(false);
+        return;
+      }
+
       const objectives = await Promise.all(
         snapshot.docs.map(async (doc) => {
           const queryFiles = query(

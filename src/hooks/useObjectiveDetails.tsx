@@ -13,7 +13,24 @@ type Option = {
 var customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 
-const useObjectiveDetails = (objectives: Objective[]) => {
+const useObjectiveDetails = (objectives: Objective[] | []) => {
+  if (objectives.length === 0) {
+    return {
+      options: [],
+      selectedObjective: null,
+      showCompletationPopup: () => false,
+      files: [],
+      cardsToShow: [],
+      handleValueChange: () => {},
+      selectedValue: {
+        label: "",
+        value: "",
+        principal: false,
+        finished: false,
+      },
+    };
+  }
+
   const options = useMemo<Option[]>(
     () =>
       objectives.map((item) => ({

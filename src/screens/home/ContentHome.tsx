@@ -7,8 +7,9 @@ import useObjectiveDetails from "@/hooks/useObjectiveDetails";
 import { Objective } from "@/utils/types";
 import { Link } from "expo-router";
 import { FlatList, StyleSheet, Text, View } from "react-native";
+import EmptyHome from "./EmptyHome";
 
-const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
+const ContentHome = ({ objectives }: { objectives: Objective[] | [] }) => {
   const {
     cardsToShow,
     files,
@@ -21,50 +22,52 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
   const { loadingText, textToShow } =
     useCalculateRemainingTime(selectedObjective);
 
-  console.log(options);
-
   return (
     <>
-      {showCompletationPopup() && (
-        <CompletedObjective objectiveId={selectedObjective.id} />
+      {objectives.length > 0 && showCompletationPopup() && (
+        <CompletedObjective objectiveId={selectedObjective?.id} />
       )}
       <FlatList
-        contentContainerStyle={{ paddingVertical: 20 }}
-        ListHeaderComponent={
-          <>
-            <Text style={styles.title}>Objetivo del dia</Text>
-            <View style={styles.bar}>
-              <CustomPicker
-                options={options}
-                selectedValue={selectedValue}
-                onValueChange={handleValueChange}
-              />
-              <Text style={styles.helperText}>
-                {files.length}/{selectedObjective.totalDays} dias
-              </Text>
-            </View>
-
-            {loadingText ? (
-              <HomeTextSkeleton />
-            ) : selectedObjective.completed ? (
-              <View>
-                <Text style={styles.subtitle}>Objetivo completado</Text>
-                <Link
-                  href={`/home/${selectedObjective.id}`}
-                  style={styles.link}
-                >
-                  Ir al resultado
-                </Link>
-              </View>
-            ) : (
-              <Text style={styles.subtitle}>{textToShow}</Text>
-            )}
-          </>
+        contentContainerStyle={{ paddingVertical: 20, flexGrow: 1 }}
+        ListHeaderComponentStyle={
+          objectives.length > 0 && {
+            gap: 24,
+            marginBottom: 24,
+          }
         }
-        ListHeaderComponentStyle={{
-          gap: 24,
-          marginBottom: 24,
-        }}
+        ListHeaderComponent={() =>
+          objectives.length > 0 && (
+            <>
+              <Text style={styles.title}>Objetivo del dia</Text>
+              <View style={styles.bar}>
+                <CustomPicker
+                  options={options}
+                  selectedValue={selectedValue}
+                  onValueChange={handleValueChange}
+                />
+                <Text style={styles.helperText}>
+                  {files.length}/{selectedObjective?.totalDays} dias
+                </Text>
+              </View>
+
+              {loadingText ? (
+                <HomeTextSkeleton />
+              ) : selectedObjective?.completed ? (
+                <View>
+                  <Text style={styles.subtitle}>Objetivo completado</Text>
+                  <Link
+                    href={`/home/${selectedObjective.id}`}
+                    style={styles.link}
+                  >
+                    Ir al resultado
+                  </Link>
+                </View>
+              ) : (
+                <Text style={styles.subtitle}>{textToShow}</Text>
+              )}
+            </>
+          )
+        }
         data={cardsToShow}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item, index }) =>
@@ -73,8 +76,8 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
           ) : (
             <MiniPhotoCard
               index={index}
-              imageUrl={selectedObjective.files[index]?.url}
-              objectiveId={selectedObjective.id}
+              imageUrl={selectedObjective?.files[index]?.url}
+              objectiveId={selectedObjective?.id}
               file={item}
             />
           )
@@ -82,6 +85,7 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
         numColumns={3}
         columnWrapperStyle={{ justifyContent: "flex-start", gap: 10 }}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+        ListEmptyComponent={<EmptyHome />}
         style={{
           paddingHorizontal: 20,
         }}

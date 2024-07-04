@@ -35,6 +35,7 @@ export default function TimeModal() {
   const handleClose = async () => {
     router.push("/(main)/home");
     await updateSession({ ...session, notificationTime: null });
+    await handleUpdate({ notificationTime: null });
   };
 
   const handleChange = async () => {

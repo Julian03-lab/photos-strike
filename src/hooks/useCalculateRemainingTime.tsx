@@ -11,9 +11,11 @@ const formatTime = (hours: number, minutes: number) => {
   return `${hour}:${minute}`;
 };
 
-const useCalculateRemainingTime = (selectedObjective: Objective) => {
+const useCalculateRemainingTime = (selectedObjective: Objective | null) => {
   const [textToShow, setTextToShow] = useState("");
   const [loadingText, setLoadingText] = useState(false);
+
+  if (!selectedObjective) return { textToShow, loadingText };
 
   const calculateTimeToNextPhoto = () => {
     const nextPhotoDate = dayjs(

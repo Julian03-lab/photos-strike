@@ -2,7 +2,7 @@ import { Objective } from "@/utils/types";
 import { create } from "zustand";
 
 interface ObjectivesStore {
-  objectives: Objective[];
+  objectives: Objective[] | [];
   setObjectives: (objectives: Objective[]) => void;
   appendObjectives: (objectives: Objective[]) => void;
   removeObjective: (objectiveId: string) => void;

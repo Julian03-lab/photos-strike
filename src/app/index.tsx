@@ -14,9 +14,7 @@ const index = () => {
 
   useEffect(() => {
     if (loading) return;
-    if (session) {
-      router.push("/(main)/home");
-    } else {
+    if (!session) {
       checkOnBoard();
     }
   }, [loading, session]);

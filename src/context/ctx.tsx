@@ -72,7 +72,14 @@ export function SessionProvider(props: React.PropsWithChildren) {
         // console.log("Usuario en firebase: ", finalUser);
         setSession(finalUser);
         await AsyncStorage.setItem("@user", JSON.stringify(finalUser));
-        router.replace("/(main)/home");
+
+        console.log(finalUser);
+
+        if (finalUser.birthday) {
+          router.replace("/(main)/home");
+        } else {
+          router.replace("/(auth)/data-extra");
+        }
       } else {
         setSession(null);
       }

@@ -15,7 +15,13 @@ import {
 } from "react-native";
 import Animated, { ZoomIn } from "react-native-reanimated";
 
-const CompletedObjective = ({ objectiveId }: { objectiveId: string }) => {
+const CompletedObjective = ({
+  objectiveId,
+}: {
+  objectiveId: string | undefined;
+}) => {
+  if (!objectiveId) return null;
+
   const [modalVisible, setModalVisible] = useState(true);
   const [updateDoc] = useUpdateDoc();
   const animationRef = React.useRef<LottieView>(null);
