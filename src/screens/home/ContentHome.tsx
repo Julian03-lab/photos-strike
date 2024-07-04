@@ -21,6 +21,8 @@ const ContentHome = ({ objectives }: { objectives: Objective[] }) => {
   const { loadingText, textToShow } =
     useCalculateRemainingTime(selectedObjective);
 
+  console.log(options);
+
   return (
     <>
       {showCompletationPopup() && (

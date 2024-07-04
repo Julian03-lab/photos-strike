@@ -18,7 +18,13 @@ import useDeleteDoc from "@/hooks/useDeleteDoc";
 import useUpdateDoc from "@/hooks/useUpdateDoc";
 import { router } from "expo-router";
 
-const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
+const IndividualObjectiveCard = ({
+  objective,
+  isFinished,
+}: {
+  objective: Objective;
+  isFinished?: boolean;
+}) => {
   const [handleDelete, loadingDelete] = useDeleteDoc();
   const [handleUpdate, loadingUpdate] = useUpdateDoc();
   const [menuVisible, setMenuVisible] = useState(false);
@@ -64,16 +70,18 @@ const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
         title: objective.title,
         endingDate: objective.endingDate,
         startingDate: objective.startingDate,
-        notificationTime: objective.notificationTime,
       },
     });
   };
 
-  const options = [
+  const goingOptions = [
     {
       label: faved ? "Destacado" : "Destacar",
       icon: <FontAwesome name={faved ? "star" : "star-o"} size={24} />,
-      onPress: handleFavorite,
+      onPress: () => {
+        closeMenu();
+        handleFavorite();
+      },
     },
     !objective.completed
       ? {
@@ -90,13 +98,23 @@ const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
         <Feather name={"trash"} size={24} color={"red"} />
       ),
       textColor: "red",
-      onPress: () => handleDelete(objective.id),
+      onPress: () => {
+        handleDelete(objective.id);
+      },
+    },
+  ];
+
+  const finishedOptions = [
+    {
+      label: "Ver resultado",
+      icon: <Feather name={"arrow-up-right"} size={24} color={"black"} />,
+      onPress: () => router.push(`/home/${objective.id}`),
     },
   ];
 
   return (
     <ContextMenu
-      options={options}
+      options={isFinished ? finishedOptions : goingOptions}
       menuVisible={menuVisible}
       closeMenu={closeMenu}
       disabled={loadingDelete || loadingUpdate}
@@ -106,15 +124,23 @@ const IndividualObjectiveCard = ({ objective }: { objective: Objective }) => {
   );
 };
 export default IndividualObjectiveCard;
+
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#51C878",
-    // padding: 20,
+    backgroundColor: "#CAE7CB",
     borderRadius: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
+  },
+  activeBorder: {
+    borderWidth: 2,
+    borderColor: "#51C878",
+  },
+  finishedBorder: {
+    borderWidth: 2,
+    borderColor: "red",
   },
   title: {
     fontSize: 18,

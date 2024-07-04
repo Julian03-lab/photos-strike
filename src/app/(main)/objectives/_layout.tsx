@@ -1,12 +1,10 @@
-import { useSession } from "@/context/ctx";
+import Points from "@/components/Points";
 import { Feather } from "@expo/vector-icons";
 import { router, Stack } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 const ObjectivesLayout = () => {
-  const { session } = useSession();
-
   return (
     <>
       <Stack
@@ -28,25 +26,7 @@ const ObjectivesLayout = () => {
                 <Feather name="settings" size={24} color="black" />
               </TouchableOpacity>
             ),
-            headerLeft: () => (
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontFamily: "Poppins_400Regular",
-                }}
-              >
-                Hola{" "}
-                <Text
-                  style={{
-                    fontFamily: "Poppins_700Bold",
-                    textTransform: "capitalize",
-                  }}
-                >
-                  {session?.displayName}
-                </Text>
-                !
-              </Text>
-            ),
+            headerLeft: () => <Points />,
           }}
         />
         <Stack.Screen

@@ -1,9 +1,11 @@
 import SecondaryButton from "@/components/buttons/SecondaryButton";
 import IndividualObjectiveCard from "@/components/cards/IndividualObjectiveCard";
 import ObjectiveCard from "@/components/cards/ObjectiveCard";
+import { useObjectivesStore } from "@/context/store";
 import useFetchObjectives from "@/hooks/useFetchObjectives";
 import { Feather } from "@expo/vector-icons";
-import { router } from "expo-router";
+import dayjs from "dayjs";
+import { router, Stack } from "expo-router";
 import { useMemo } from "react";
 import {
   View,
@@ -11,23 +13,58 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 
+var customParseFormat = require("dayjs/plugin/customParseFormat");
+dayjs.extend(customParseFormat);
+
 const Objectives = () => {
-  const { loading, objectives } = useFetchObjectives();
+  const { objectives } = useObjectivesStore();
 
   const mainObjectives = useMemo(
     () => objectives.filter((objective) => objective.principal),
     [objectives]
   );
 
-  // console.log("📁Archivo: index.tsx | Linea: 24 | objectives -> ", objectives);
+  const finishedObjectives = useMemo(
+    () =>
+      objectives.filter(
+        (objective) =>
+          objective.completed ||
+          dayjs().isAfter(dayjs(objective.endingDate, "DD-MM-YYYY"), "D")
+      ),
+    [objectives]
+  );
+
+  const activeObjectives = useMemo(
+    () =>
+      objectives.filter(
+        (objective) =>
+          !objective.completed &&
+          dayjs().isBefore(dayjs(objective.endingDate, "DD-MM-YYYY"), "D")
+      ),
+    [objectives]
+  );
 
   return (
     <ScrollView
       contentContainerStyle={styles.container}
       style={{ flex: 1, backgroundColor: "#fff" }}
     >
+      <Stack.Screen
+        options={{
+          title: "Objetivos",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => router.push("/(main)/objectives/new-objective")}
+              style={{ marginRight: 16 }}
+            >
+              <Feather name="plus" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       {mainObjectives.length > 0 && (
         <>
           <View>
@@ -42,29 +79,40 @@ const Objectives = () => {
         </>
       )}
       <View>
-        <Text style={styles.othersTitle}>Todos los objetivos:</Text>
-        {!loading ? (
-          <View
-            style={{
-              gap: 20,
-            }}
-          >
-            {objectives.map((objective) => (
-              <IndividualObjectiveCard
-                key={objective.id}
-                objective={objective}
-              />
-            ))}
-            <SecondaryButton
-              onPress={() => router.push("/(main)/objectives/new-objective")}
-              icon={<Feather name="plus-circle" size={24} />}
-            >
-              Agregar objetivo
-            </SecondaryButton>
-          </View>
-        ) : (
-          <ActivityIndicator size="large" color="#51C878" />
-        )}
+        <Text style={styles.othersTitle}>
+          <Feather name="check-circle" size={24} color={"#51C878"} /> Objetivos
+          activos:
+        </Text>
+
+        <View
+          style={{
+            gap: 20,
+          }}
+        >
+          {activeObjectives.map((objective) => (
+            <IndividualObjectiveCard key={objective.id} objective={objective} />
+          ))}
+        </View>
+      </View>
+      <View>
+        <Text style={styles.othersTitle}>
+          <Feather name="flag" size={24} color={"#51C878"} /> Objetivos
+          finalizados:
+        </Text>
+
+        <View
+          style={{
+            gap: 20,
+          }}
+        >
+          {finishedObjectives.map((objective) => (
+            <IndividualObjectiveCard
+              isFinished
+              key={objective.id}
+              objective={objective}
+            />
+          ))}
+        </View>
       </View>
     </ScrollView>
   );

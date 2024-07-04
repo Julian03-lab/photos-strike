@@ -43,6 +43,7 @@ const CompletedDayPopup = ({ open }: { open: boolean }) => {
   const zoom2 = ZoomIn.delay(1000);
 
   const handleCollect = async () => {
+    if (loading) return;
     await handleUpdate(NEW_POINTS);
     animationRef.current?.play();
     setTimeout(() => {

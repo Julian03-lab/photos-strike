@@ -10,7 +10,12 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-type Option = { label: string; value: string; principal: boolean };
+type Option = {
+  label: string;
+  value: string;
+  principal: boolean;
+  finished: boolean;
+};
 
 type CustomPickerProps = {
   options: Option[];
@@ -31,7 +36,22 @@ const CustomPicker = ({
         onValueChange(item);
         setModalVisible(false);
       }}
+      style={{
+        flexDirection: "row",
+        paddingHorizontal: 20,
+        gap: 6,
+      }}
     >
+      {item.finished && (
+        <Text
+          style={[
+            styles.option,
+            { color: "red", fontFamily: "Poppins_500Medium" },
+          ]}
+        >
+          <Feather name="flag" size={20} color={"red"} /> Finalizado
+        </Text>
+      )}
       <Text style={styles.option}>{item.label}</Text>
     </TouchableOpacity>
   );
@@ -123,7 +143,6 @@ const styles = StyleSheet.create({
   },
   option: {
     paddingVertical: 16,
-    paddingHorizontal: 20,
     fontSize: 18,
     fontFamily: "Poppins_400Regular",
   },

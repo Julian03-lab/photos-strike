@@ -22,7 +22,7 @@ const EditObjective = () => {
       notificationTime: string;
     }>();
 
-  const [objective, setObjective] = useState<string>(title);
+  const [objective, setObjective] = useState<string>(title as string);
   const [newEndingDate, setNewEndingDate] = useState(endingDate);
   const [newNotificationTime, setNewNotificationTime] =
     useState(notificationTime);
@@ -32,7 +32,7 @@ const EditObjective = () => {
   const [updateObjective, isLoading] = useUpdateDoc();
 
   const handleUpdate = async () => {
-    await updateObjective(objectiveId, {
+    await updateObjective(objectiveId as string, {
       title: objective,
       endingDate: newEndingDate,
       notificationTime: newNotificationTime,
@@ -72,12 +72,6 @@ const EditObjective = () => {
         >
           {newEndingDate}
         </LabelButton>
-        <LabelButton
-          label="Hora del recordatorio"
-          onPress={() => setShowPicker("time")}
-        >
-          {newNotificationTime}
-        </LabelButton>
         <DateTimePickerModal
           date={dayjs(endingDate, "DD-MM-YYYY").toDate()}
           display="default"
@@ -89,17 +83,6 @@ const EditObjective = () => {
           }}
           onCancel={() => setShowPicker(null)}
           minimumDate={dayjs(endingDate, "DD-MM-YYYY").toDate()}
-        />
-        <DateTimePickerModal
-          date={new Date()}
-          display="spinner"
-          isVisible={showPicker === "time"}
-          mode="time"
-          onConfirm={(date) => {
-            setNewNotificationTime(dayjs(date).format("HH:mm"));
-            setShowPicker(null);
-          }}
-          onCancel={() => setShowPicker(null)}
         />
       </View>
       <PrimaryButton onPress={handleUpdate} loading={isLoading}>

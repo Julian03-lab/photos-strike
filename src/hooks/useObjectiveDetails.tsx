@@ -3,7 +3,12 @@ import dayjs from "dayjs"; // Assuming dayjs is installed
 import formatDate from "@/utils/formatDate";
 import { IFile, Objective } from "@/utils/types";
 
-type Option = { label: string; value: string; principal: boolean };
+type Option = {
+  label: string;
+  value: string;
+  principal: boolean;
+  finished: boolean;
+};
 
 var customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
@@ -15,6 +20,9 @@ const useObjectiveDetails = (objectives: Objective[]) => {
         label: item.title,
         value: item.id,
         principal: item.principal,
+        finished:
+          item.completed ||
+          dayjs().isAfter(dayjs(item.endingDate, "DD-MM-YYYY"), "D"),
       })),
     [objectives]
   );

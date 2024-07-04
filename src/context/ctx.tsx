@@ -59,7 +59,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
 
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log("Hay usuario en firebase: ", user);
+        // console.log("Hay usuario en firebase: ", user);
         const id = user.uid;
         const userDoc = await getDoc(doc(db, "users", id));
 
