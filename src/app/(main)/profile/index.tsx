@@ -1,6 +1,7 @@
 import FlatButton from "@/components/buttons/FlatButton";
 import WarningPopUp from "@/components/popups/WarningPopUp";
 import { useSession } from "@/context/ctx";
+import { getAge } from "@/utils/getAge";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -12,7 +13,7 @@ const ProfileScreen = () => {
 
   if (!session) return null;
 
-  const { displayName, photoURL } = session;
+  const { displayName, photoURL, country, birthday } = session;
 
   return (
     <View style={styles.container}>
@@ -27,8 +28,8 @@ const ProfileScreen = () => {
 
           {/* Information */}
           <View style={styles.extraInfo}>
-            <Text style={styles.countryText}>🇦🇷Argentina</Text>
-            <Text style={styles.ageText}>21 años</Text>
+            <Text style={styles.countryText}>{country}</Text>
+            <Text style={styles.ageText}>{getAge(birthday)} años</Text>
           </View>
         </View>
       </View>

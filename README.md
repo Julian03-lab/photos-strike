@@ -17,9 +17,6 @@ Una app para android realizada con React Native y Expo, permite establecer un ob
 ## TODO:
 
 - [/] Permitir ver el resultado final
-- [x] Pantalla de perfil
-- [x] Implementar un sistema de recompensas
-- [/] Pantalla de ajustes de cuenta
 - [ ] Ver algunas estadisticas
 - [ ] Implementar suscripcion
 - [ ] Dividir funciones premium y gratuitas

@@ -24,16 +24,23 @@ import * as ImagePicker from "expo-image-picker";
 import { type CameraCapturedPicture } from "expo-camera";
 import { Feather } from "@expo/vector-icons";
 
+var customParseFormat = require("dayjs/plugin/customParseFormat");
+dayjs.extend(customParseFormat);
+
 const AccountScreen = () => {
   const { session, setSession } = useSession();
   const [handleUpdate, loading] = useUpdateUser();
   const [country, setCountry] = useState<string>("Argentina");
   const [countryCode, setCountryCode] = useState<CountryCode>("AR");
   const [openDatePicker, setOpenDatePicker] = useState(false);
-  const [birthday, setBirthday] = useState<Date | null>(null);
+  const [birthday, setBirthday] = useState<Date | null>(
+    dayjs(session?.birthday, "DD/MM/YYYY").toDate() || null
+  );
   const [gender, setGender] = useState<string>("man");
   const [name, setName] = useState<string>(session?.displayName || "");
-  const [image, setImage] = useState<CameraCapturedPicture | null>(null);
+  const [image, setImage] = useState<CameraCapturedPicture | null>(
+    session ? ({ uri: session?.photoURL } as CameraCapturedPicture) : null
+  );
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -46,6 +53,30 @@ const AccountScreen = () => {
 
     if (!result.canceled) {
       setImage(result.assets[0] as CameraCapturedPicture);
+    }
+  };
+
+  const saveImage = async (image: CameraCapturedPicture) => {
+    try {
+      let base64Img = `data:image/jpg;base64,${image.base64}`;
+      let apiUrl = "https:api.cloudinary.com/v1_1/dadt6ioi4/image/upload";
+      let data = {
+        file: base64Img,
+        upload_preset: "azigrdxg",
+      };
+
+      const response = await fetch(apiUrl, {
+        body: JSON.stringify(data),
+        headers: {
+          "content-type": "application/json",
+        },
+        method: "POST",
+      });
+      const file = await response.json();
+
+      return file.secure_url;
+    } catch (error) {
+      console.log("Save image error: ", error);
     }
   };
 
@@ -62,20 +93,31 @@ const AccountScreen = () => {
   const onSubmit = async () => {
     if (!session) return;
 
+    let photoURL = null;
+
+    if (image && image.base64) {
+      photoURL = await saveImage(image);
+    }
+
     const data: { [key: string]: string | Date | null } = {
       displayName: name,
       country,
-      birthday,
+      birthday: dayjs(birthday).isSame(dayjs(session?.birthday, "DD/MM/YYYY"))
+        ? null
+        : dayjs(birthday).format("DD/MM/YYYY"),
       gender,
+      photoURL,
     };
+
+    if (country === session.country) delete data.country;
+    if (gender === session.gender) delete data.gender;
+    if (name === session.displayName) delete data.displayName;
 
     Array.from(Object.entries(data)).forEach(([key, value]) => {
       if (!value) {
         delete data[key];
       }
     });
-
-    console.log({ ...session, ...data });
 
     if (data) {
       await handleUpdate(data);
@@ -97,7 +139,7 @@ const AccountScreen = () => {
           }}
         >
           {/* <Text style={styles.label}>Foto de perfil</Text> */}
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={pickImage}>
             {image ? (
               <Image
                 src={image.uri}
@@ -115,9 +157,11 @@ const AccountScreen = () => {
                   width: "50%",
                   borderRadius: 1000,
                   backgroundColor: "#CAE7CB",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Feather name="camera" size={64} color="#0f0f0f" />
+                <Feather name="upload" size={64} color="#0f0f0f" />
               </View>
             )}
           </TouchableOpacity>

@@ -17,11 +17,13 @@ export const checkNotification = async (time: string) => {
   const notificationStatus = await AsyncStorage.getItem("@notificationTime");
 
   // For debugging purposes
-  // notifee.getTriggerNotificationIds().then((ids) => console.log("All trigger notifications: ", ids));
-  //  console.log(
-  //    "📁Archivo: handleNotifications.ts | Linea: 10 | notificationStatus -> ",
-  //    notificationStatus
-  //  );
+  notifee
+    .getTriggerNotificationIds()
+    .then((ids) => console.log("All trigger notifications: ", ids));
+  console.log(
+    "📁Archivo: handleNotifications.ts | Linea: 10 | notificationStatus -> ",
+    notificationStatus
+  );
 
   if (!notificationStatus) {
     return false;
