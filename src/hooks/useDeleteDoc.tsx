@@ -1,12 +1,10 @@
 import { useSession } from "@/context/ctx";
 import { useObjectivesStore } from "@/context/store";
-import { doc, writeBatch } from "firebase/firestore";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
-import { db } from "root/config/firebase";
+import { auth } from "root/config/firebase";
 
 const useDeleteDoc = (): [(documentId: string) => Promise<void>, boolean] => {
-  const { session } = useSession();
   const { removeObjective } = useObjectivesStore();
 
   const [loading, setLoading] = useState(false);
@@ -14,9 +12,30 @@ const useDeleteDoc = (): [(documentId: string) => Promise<void>, boolean] => {
   const handleDelete = async (documentId: string) => {
     try {
       setLoading(true);
-      const batch = writeBatch(db);
-      batch.delete(doc(db, `users/${session?.uid}/objectives/${documentId}`));
-      await batch.commit();
+
+      const idToken = await auth.currentUser?.getIdToken();
+
+      const response = await fetch(
+        `http://192.168.100.8:3000/api/objectives/${documentId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al eliminar el objetivo");
+      }
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error("Error al eliminar el objetivo");
+      }
+
       setTimeout(() => {
         removeObjective(documentId);
         setLoading(false);

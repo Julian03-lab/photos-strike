@@ -20,8 +20,9 @@ const MiniPhotoCard = ({
   objectiveId,
   file: { empty, unlocked, bigView, id },
 }: CardProps) => {
-  const lockedRef: any = useRef(null);
-  const unlockedRef: any = useRef(null);
+  const lockedRef = useRef<LottieView>(null);
+  const unlockedRef = useRef<LottieView>(null);
+  const skipedRef = useRef<LottieView>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [openPhoto, setOpenPhoto] = useState(false);
   // console.log(permission);
@@ -29,7 +30,10 @@ const MiniPhotoCard = ({
   if (!objectiveId) return null;
 
   const handlePress = async () => {
-    if (empty) return;
+    if (empty) {
+      skipedRef.current?.play();
+      return;
+    }
     if (imageUrl) {
       setOpenPhoto(!openPhoto);
       return;
@@ -47,7 +51,7 @@ const MiniPhotoCard = ({
         }
       }
     } else {
-      lockedRef.current.play();
+      lockedRef.current?.play();
     }
   };
 
@@ -120,14 +124,15 @@ const MiniPhotoCard = ({
         {!imageUrl ? (
           empty === true ? (
             <LottieView
-              autoPlay={false}
+              autoPlay={true}
               loop={false}
-              ref={lockedRef}
+              ref={skipedRef}
               style={{
-                width: 56,
-                height: 56,
+                width: 36,
+                height: 36,
+                marginTop: 8,
               }}
-              source={require("root/assets/animations/locked.json")}
+              source={require("root/assets/animations/cancel.json")}
             />
           ) : !unlocked ? (
             //   <Feather name="lock" size={24} />

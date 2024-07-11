@@ -15,6 +15,7 @@ import AnimatedNumber from "react-native-animated-numbers";
 import Animated, { ZoomIn } from "react-native-reanimated";
 import Points from "../Points";
 import useUpdatePoints from "@/hooks/useUpdatePoints";
+import { Audio } from "expo-av";
 
 const NEW_POINTS = 50;
 
@@ -24,6 +25,24 @@ const CompletedDayPopup = ({ open }: { open: boolean }) => {
   const animationRef = React.useRef<LottieView>(null);
   const { handleUpdate, loading } = useUpdatePoints();
 
+  async function playInitialSound() {
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(
+      require("root/assets/sounds/coins-win.mp3")
+    );
+
+    await sound.playAsync();
+  }
+
+  async function playCollectSound() {
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(
+      require("root/assets/sounds/coin-pickup.mp3")
+    );
+
+    await sound.playAsync();
+  }
+
   const closeModal = () => {
     router.setParams({ completed: "false" });
   };
@@ -32,6 +51,7 @@ const CompletedDayPopup = ({ open }: { open: boolean }) => {
     if (open) {
       setTimeout(() => {
         setPoints(NEW_POINTS);
+        // playInitialSound();
       }, 1500);
       // setTimeout(() => {
       //   setStreak(2);
@@ -46,6 +66,7 @@ const CompletedDayPopup = ({ open }: { open: boolean }) => {
     if (loading) return;
     await handleUpdate(NEW_POINTS);
     animationRef.current?.play();
+    playCollectSound();
     setTimeout(() => {
       closeModal();
     }, 2500);

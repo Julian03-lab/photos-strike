@@ -43,3 +43,10 @@ export interface IUser {
   birthday?: string;
   country?: string;
 }
+
+export type Option = {
+  label: string;
+  value: string;
+  principal: boolean;
+  finished: boolean;
+};

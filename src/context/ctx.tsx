@@ -73,7 +73,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
         setSession(finalUser);
         await AsyncStorage.setItem("@user", JSON.stringify(finalUser));
 
-        console.log(finalUser);
+        // console.log(finalUser);
 
         if (finalUser.birthday) {
           router.replace("/(main)/home");

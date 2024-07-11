@@ -17,6 +17,7 @@ import { Objective } from "@/utils/types";
 import useDeleteDoc from "@/hooks/useDeleteDoc";
 import useUpdateDoc from "@/hooks/useUpdateDoc";
 import { router } from "expo-router";
+import WarningPopUp from "../popups/WarningPopUp";
 
 const IndividualObjectiveCard = ({
   objective,
@@ -29,6 +30,7 @@ const IndividualObjectiveCard = ({
   const [handleUpdate, loadingUpdate] = useUpdateDoc();
   const [menuVisible, setMenuVisible] = useState(false);
   const [faved, setFaved] = useState(objective.principal || false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const closeMenu = () => setMenuVisible(false);
   const openMenu = () => setMenuVisible(true);
@@ -36,6 +38,15 @@ const IndividualObjectiveCard = ({
   const handleFavorite = () => {
     setFaved(!faved);
     handleUpdate(objective.id, { principal: !faved });
+  };
+
+  const handleDeletePress = async () => {
+    try {
+      setDeleteModalVisible(false);
+      await handleDelete(objective.id);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const Card = ({ openMenu }: { openMenu: () => void }) => (
@@ -99,7 +110,7 @@ const IndividualObjectiveCard = ({
       ),
       textColor: "red",
       onPress: () => {
-        handleDelete(objective.id);
+        setDeleteModalVisible(true);
       },
     },
   ];
@@ -113,14 +124,24 @@ const IndividualObjectiveCard = ({
   ];
 
   return (
-    <ContextMenu
-      options={isFinished ? finishedOptions : goingOptions}
-      menuVisible={menuVisible}
-      closeMenu={closeMenu}
-      disabled={loadingDelete || loadingUpdate}
-    >
-      <Card openMenu={openMenu} />
-    </ContextMenu>
+    <>
+      <WarningPopUp
+        open={deleteModalVisible}
+        handleOpen={setDeleteModalVisible}
+        title="Eliminar objetivo"
+        subtitle="¿Estas seguro que deseas eliminar este objetivo? Esta acción no se puede deshacer."
+        buttonTitle="Eliminar"
+        callback={handleDeletePress}
+      />
+      <ContextMenu
+        options={isFinished ? finishedOptions : goingOptions}
+        menuVisible={menuVisible}
+        closeMenu={closeMenu}
+        disabled={loadingDelete || loadingUpdate}
+      >
+        <Card openMenu={openMenu} />
+      </ContextMenu>
+    </>
   );
 };
 export default IndividualObjectiveCard;

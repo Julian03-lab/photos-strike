@@ -15,12 +15,14 @@ import {
 import ContextMenu from "../buttons/ContextMenu";
 import { getStreak } from "@/utils/calculateStrike";
 import { router } from "expo-router";
+import WarningPopUp from "../popups/WarningPopUp";
 
 const ObjectiveCard = ({ objective }: { objective: Objective }) => {
   const [handleDelete, loadingDelete] = useDeleteDoc();
   const [handleUpdate, loadingUpdate] = useUpdateDoc();
   const [menuVisible, setMenuVisible] = useState(false);
   const [faved, setFaved] = useState(objective.principal || false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const streak = useMemo(() => getStreak(objective.files), [objective.files]);
   const filesToRender = useMemo(
     () =>
@@ -32,14 +34,21 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
     [objective.files]
   );
 
-  // console.log(filesToRender);
-
   const closeMenu = () => setMenuVisible(false);
   const openMenu = () => setMenuVisible(true);
 
   const handleFavorite = () => {
     setFaved(!faved);
     handleUpdate(objective.id, { principal: !faved });
+  };
+
+  const handleDeletePress = async () => {
+    try {
+      setDeleteModalVisible(false);
+      await handleDelete(objective.id);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleEdit = () => {
@@ -51,7 +60,6 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
         title: objective.title,
         endingDate: objective.endingDate,
         startingDate: objective.startingDate,
-        notificationTime: objective.notificationTime,
       },
     });
   };
@@ -77,7 +85,9 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
         <Feather name={"trash"} size={24} color={"red"} />
       ),
       textColor: "red",
-      onPress: () => handleDelete(objective.id),
+      onPress: () => {
+        setDeleteModalVisible(true);
+      },
     },
   ];
 
@@ -140,14 +150,24 @@ const ObjectiveCard = ({ objective }: { objective: Objective }) => {
     );
   };
   return (
-    <ContextMenu
-      options={options}
-      menuVisible={menuVisible}
-      closeMenu={closeMenu}
-      disabled={loadingDelete || loadingUpdate}
-    >
-      <Card openMenu={openMenu} />
-    </ContextMenu>
+    <>
+      <WarningPopUp
+        open={deleteModalVisible}
+        handleOpen={setDeleteModalVisible}
+        title="Eliminar objetivo"
+        subtitle="¿Estas seguro que deseas eliminar este objetivo? Esta acción no se puede deshacer."
+        buttonTitle="Eliminar"
+        callback={handleDeletePress}
+      />
+      <ContextMenu
+        options={options}
+        menuVisible={menuVisible}
+        closeMenu={closeMenu}
+        disabled={loadingDelete || loadingUpdate}
+      >
+        <Card openMenu={openMenu} />
+      </ContextMenu>
+    </>
   );
 };
 

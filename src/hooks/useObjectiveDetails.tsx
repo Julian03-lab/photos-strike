@@ -1,50 +1,70 @@
 import { useState, useMemo, useEffect } from "react";
 import dayjs from "dayjs"; // Assuming dayjs is installed
 import formatDate from "@/utils/formatDate";
-import { IFile, Objective } from "@/utils/types";
+import type { IFile, Option } from "@/utils/types";
+import { useObjectivesStore } from "@/context/store";
 
-type Option = {
-  label: string;
-  value: string;
-  principal: boolean;
-  finished: boolean;
-};
+interface OptionsProps {
+  active: Option[];
+  finished: Option[] | [];
+}
 
 var customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 
-const useObjectiveDetails = (objectives: Objective[] | []) => {
-  if (objectives.length === 0) {
-    return {
-      options: [],
-      selectedObjective: null,
-      showCompletationPopup: () => false,
-      files: [],
-      cardsToShow: [],
-      handleValueChange: () => {},
-      selectedValue: {
-        label: "",
-        value: "",
-        principal: false,
-        finished: false,
-      },
-    };
-  }
+const useObjectiveDetails = () => {
+  const { objectives } = useObjectivesStore();
 
-  const options = useMemo<Option[]>(
-    () =>
-      objectives.map((item) => ({
+  // objectives.map((item) => ({
+  //   label: item.title,
+  //   value: item.id,
+  //   principal: item.principal,
+  //   finished:
+  //     item.completed ||
+  //     dayjs().isAfter(dayjs(item.endingDate, "DD-MM-YYYY"), "D"),
+  // })
+
+  const options = useMemo<OptionsProps>(() => {
+    const active = objectives
+      .filter(
+        (item) =>
+          !item.completed &&
+          !dayjs().isAfter(dayjs(item.endingDate, "DD-MM-YYYY"), "D")
+      )
+      .map((item) => ({
         label: item.title,
         value: item.id,
         principal: item.principal,
         finished:
           item.completed ||
           dayjs().isAfter(dayjs(item.endingDate, "DD-MM-YYYY"), "D"),
-      })),
-    [objectives]
-  );
+      }));
+
+    const finished = objectives
+      .filter(
+        (item) =>
+          item.completed ||
+          dayjs().isAfter(dayjs(item.endingDate, "DD-MM-YYYY"), "D")
+      )
+      .map((item) => ({
+        label: item.title,
+        value: item.id,
+        principal: item.principal,
+        finished:
+          item.completed ||
+          dayjs().isAfter(dayjs(item.endingDate, "DD-MM-YYYY"), "D"),
+      }));
+
+    return {
+      active,
+      finished,
+    };
+  }, [objectives]);
+
   const [selectedValue, setSelectedValue] = useState(
-    options.find((item) => item.principal === true) || options[0]
+    [...options.active, ...options.finished].find(
+      (item) => item.principal === true
+    ) || options.active[0]
   );
 
   const selectedObjective = useMemo(

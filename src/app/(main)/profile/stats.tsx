@@ -9,11 +9,7 @@ const StatsScreen = () => {
     <View style={styles.container}>
       <Text>StatsScreen</Text>
       <Button title="Open Modal" onPress={() => setModalOpen(true)} />
-      <CompletedDayPopup
-        open={modalOpen}
-        handleOpen={setModalOpen}
-        callback={() => null}
-      />
+      <CompletedDayPopup open={modalOpen} />
       {/* <LottieView
         style={{ flex: 1 }}
         autoPlay
